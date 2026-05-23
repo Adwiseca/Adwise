@@ -1106,7 +1106,7 @@ async function send(){
   hist=[...hist,uMsg];
   showTyping();
   try{
-    const res=await fetch('https://adwise.alexmarchenko1122.workers.dev',{
+    const res=await fetch('https://adwise.alexmarchenko1122.workers.dev/',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:hist})
