@@ -1,1020 +1,1137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AdWise Canada — AI-Powered Advertising for Canadian Businesses</title>
-  <meta name="description" content="AdWise launches Meta, Google and TikTok ads for Canadian small businesses automatically. Chat with AI, connect your account, get customers. From $149 CAD/mo." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    /* ── RESET & BASE ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg:        #07080D;
-      --bg2:       #0D0F18;
-      --amber:     #F5A623;
-      --amber-dim: rgba(245,166,35,0.12);
-      --amber-glow:rgba(245,166,35,0.3);
-      --cyan:      #00E5FF;
-      --lime:      #B8FF57;
-      --white:     #FFFFFF;
-      --w60:       rgba(255,255,255,0.6);
-      --w40:       rgba(255,255,255,0.4);
-      --w20:       rgba(255,255,255,0.2);
-      --w08:       rgba(255,255,255,0.08);
-      --w05:       rgba(255,255,255,0.05);
-      --radius:    14px;
-      --font-head: 'Syne', sans-serif;
-      --font-body: 'DM Sans', sans-serif;
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--white);
-      font-family: var(--font-body);
-      overflow-x: hidden;
-      line-height: 1.6;
-    }
-    a { text-decoration: none; color: inherit; }
-    button { font-family: var(--font-body); cursor: pointer; border: none; outline: none; }
-    textarea, input { font-family: var(--font-body); outline: none; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AdWise Canada — AI Advertising for Canadian Businesses</title>
+<meta name="description" content="AdWise launches Meta, Google and TikTok ads for Canadian small businesses. Chat with AI, connect your account, get more customers. From $149 CAD/mo."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0A0A0F;
+  --ink2:#3D3D4E;
+  --ink3:#7A7A8C;
+  --rule:#E8E8EE;
+  --bg:#F8F8FC;
+  --white:#FFFFFF;
+  --amber:#D97706;
+  --amber-l:#FEF3C7;
+  --amber-m:#FDE68A;
+  --blue:#1D4ED8;
+  --blue-l:#EFF6FF;
+  --green:#059669;
+  --green-l:#ECFDF5;
+  --r:10px;
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'Geist','DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--ink);font-family:var(--sans);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+button{font-family:var(--sans);cursor:pointer;border:none;outline:none}
+textarea,input{font-family:var(--sans);outline:none}
+img{display:block;max-width:100%}
 
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--amber); border-radius: 4px; }
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--amber);border-radius:4px}
 
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
-    @keyframes float    { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
-    @keyframes pulse    { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
-    @keyframes bounce   { 0%,80%,100% { transform:translateY(0); } 40% { transform:translateY(-7px); } }
-    @keyframes glow     { 0%,100% { box-shadow:0 0 20px var(--amber-glow); } 50% { box-shadow:0 0 40px var(--amber-glow), 0 0 80px rgba(245,166,35,0.15); } }
-    @keyframes spin     { to { transform:rotate(360deg); } }
-    @keyframes slideIn  { from { opacity:0; transform:translateX(-10px); } to { opacity:1; transform:translateX(0); } }
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-    .fade-up  { animation: fadeUp  0.6s ease both; }
-    .fade-in  { animation: fadeIn  0.5s ease both; }
+/* ════════════════════
+   NAV
+════════════════════ */
+nav{
+  position:sticky;top:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;height:64px;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--rule);
+}
+.nav-brand{display:flex;align-items:baseline;gap:4px}
+.nav-logo{font-family:var(--sans);font-size:19px;font-weight:800;color:var(--ink);letter-spacing:-0.5px}
+.nav-ca{font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1.5px}
+.nav-center{display:flex;gap:4px}
+.nav-link{font-size:13.5px;font-weight:500;color:var(--ink2);padding:6px 14px;border-radius:6px;transition:all .15s}
+.nav-link:hover{background:var(--bg);color:var(--ink)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.btn-ghost{font-size:13.5px;font-weight:600;color:var(--ink2);padding:8px 16px;border-radius:7px;border:1px solid var(--rule);background:transparent;transition:all .15s}
+.btn-ghost:hover{border-color:var(--ink2);color:var(--ink)}
+.btn-primary{font-size:13.5px;font-weight:700;color:var(--white);padding:9px 20px;border-radius:7px;background:var(--ink);transition:all .15s;letter-spacing:-.2px}
+.btn-primary:hover{background:#1a1a2e;transform:translateY(-1px)}
 
-    /* ── NAV ── */
-    nav {
-      position: sticky; top: 0; z-index: 1000;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 48px;
-      background: rgba(7,8,13,0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--w08);
-    }
-    .nav-brand { display:flex; align-items:baseline; gap:6px; }
-    .nav-logo  { font-family:var(--font-head); font-size:22px; font-weight:900; color:var(--white); letter-spacing:-0.5px; }
-    .nav-ca    { font-size:12px; font-weight:700; color:var(--amber); text-transform:uppercase; letter-spacing:2px; }
-    .nav-links { display:flex; gap:32px; }
-    .nav-links a { font-size:14px; font-weight:500; color:var(--w40); transition:color 0.2s; }
-    .nav-links a:hover { color:var(--white); }
-    .btn-nav {
-      background: var(--amber); color: #07080D;
-      padding: 10px 24px; border-radius: 8px;
-      font-weight: 800; font-size: 14px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .btn-nav:hover { transform:translateY(-1px); box-shadow:0 4px 24px var(--amber-glow); }
+/* ════════════════════
+   HERO
+════════════════════ */
+.hero{
+  max-width:1160px;margin:0 auto;
+  padding:80px 48px 72px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--amber-l);border:1px solid var(--amber-m);
+  border-radius:100px;padding:5px 14px;
+  font-size:12px;font-weight:600;color:#92400E;
+  margin-bottom:22px;
+  animation:fadeUp .5s ease both;
+}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);animation:pulse 2s infinite}
+h1{
+  font-family:var(--serif);
+  font-size:clamp(36px,4.5vw,58px);
+  font-weight:400;line-height:1.1;
+  letter-spacing:-.5px;
+  color:var(--ink);
+  margin-bottom:20px;
+  animation:fadeUp .5s .1s ease both;
+}
+h1 em{font-style:italic;color:var(--amber)}
+.hero-p{
+  font-size:16px;color:var(--ink2);line-height:1.7;
+  max-width:440px;margin-bottom:32px;
+  animation:fadeUp .5s .15s ease both;
+}
+.hero-actions{display:flex;align-items:center;gap:12px;margin-bottom:48px;animation:fadeUp .5s .2s ease both}
+.btn-hero{
+  font-size:15px;font-weight:700;color:var(--white);
+  padding:13px 28px;border-radius:9px;background:var(--ink);
+  letter-spacing:-.2px;transition:all .2s;
+  display:flex;align-items:center;gap:8px;
+}
+.btn-hero:hover{background:#1a1a2e;transform:translateY(-2px);box-shadow:0 8px 24px rgba(10,10,15,.18)}
+.btn-hero-sec{
+  font-size:14px;font-weight:600;color:var(--ink2);
+  padding:13px 20px;border-radius:9px;
+  border:1px solid var(--rule);background:transparent;
+  transition:all .2s;
+}
+.btn-hero-sec:hover{border-color:var(--ink2);color:var(--ink)}
+.hero-note{font-size:12px;color:var(--ink3);animation:fadeUp .5s .25s ease both}
 
-    /* ── HERO ── */
-    #hero {
-      min-height: calc(100vh - 68px);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 80px 48px 100px;
-      position: relative;
-    }
-    .hero-glow-1 {
-      position:absolute; top:20%; left:0; width:500px; height:500px;
-      background: radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%);
-      pointer-events:none;
-    }
-    .hero-glow-2 {
-      position:absolute; top:10%; right:10%; width:400px; height:400px;
-      background: radial-gradient(circle, rgba(0,229,255,0.04) 0%, transparent 70%);
-      pointer-events:none;
-    }
-    .hero-left { position:relative; z-index:1; }
+.stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;border:1px solid var(--rule);border-radius:12px;
+  overflow:hidden;animation:fadeUp .5s .3s ease both;
+  background:var(--white);
+}
+.stat-item{padding:16px 18px;border-right:1px solid var(--rule)}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:var(--serif);font-size:26px;font-weight:400;color:var(--ink);margin-bottom:2px}
+.stat-num em{font-style:italic;color:var(--amber)}
+.stat-label{font-size:11.5px;color:var(--ink3)}
 
-    .badge {
-      display:inline-flex; align-items:center; gap:8px;
-      background:var(--amber-dim); border:1px solid rgba(245,166,35,0.25);
-      border-radius:100px; padding:6px 16px;
-      font-size:12px; font-weight:600; color:var(--amber); letter-spacing:0.3px;
-      margin-bottom:28px;
-      animation: fadeUp 0.5s ease both;
-    }
-    .badge-dot {
-      width:6px; height:6px; border-radius:50%;
-      background:var(--amber); box-shadow:0 0 6px var(--amber);
-      animation: pulse 2s infinite;
-    }
+/* HERO RIGHT */
+.hero-right{position:relative;animation:fadeUp .6s .2s ease both}
+.hero-card{
+  background:var(--white);border:1px solid var(--rule);
+  border-radius:16px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.08);
+  animation:float 6s ease infinite;
+}
+.hc-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-bottom:1px solid var(--rule);
+  background:var(--bg);
+}
+.hc-dots{display:flex;gap:5px}
+.hc-dot{width:9px;height:9px;border-radius:50%}
+.hc-title{font-size:13px;font-weight:600;color:var(--ink2)}
+.hc-live{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--green)}
+.hc-live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.hc-body{padding:16px}
+.hc-ai{
+  background:var(--bg);border:1px solid var(--rule);
+  border-radius:4px 12px 12px 12px;
+  padding:9px 13px;font-size:13px;color:var(--ink2);
+  max-width:82%;line-height:1.5;margin-bottom:8px;
+}
+.hc-user{
+  background:var(--ink);color:var(--white);
+  border-radius:12px 4px 12px 12px;
+  padding:9px 13px;font-size:13px;
+  max-width:82%;line-height:1.5;margin-bottom:8px;margin-left:auto;
+}
+.hc-row{display:flex}
+.hc-row.r{justify-content:flex-end}
+.hc-typing{
+  display:flex;gap:4px;padding:9px 13px;
+  background:var(--bg);border:1px solid var(--rule);
+  border-radius:4px 12px 12px 12px;
+  width:fit-content;margin-top:4px;
+}
+.hc-typing span{width:5px;height:5px;border-radius:50%;background:var(--ink3);display:block;animation:bounce 1.2s infinite}
+.hc-typing span:nth-child(2){animation-delay:.2s}
+.hc-typing span:nth-child(3){animation-delay:.4s}
 
-    h1 {
-      font-family: var(--font-head);
-      font-size: clamp(38px, 5vw, 62px);
-      font-weight: 900;
-      line-height: 1.06;
-      letter-spacing: -2px;
-      margin-bottom: 24px;
-      animation: fadeUp 0.5s 0.1s ease both;
-    }
-    h1 .accent { color: var(--amber); }
+/* Floating metrics */
+.fc{
+  position:absolute;
+  background:var(--white);border:1px solid var(--rule);
+  border-radius:10px;padding:10px 14px;
+  display:flex;align-items:center;gap:10px;
+  box-shadow:0 8px 24px rgba(0,0,0,.09);
+  font-size:12px;
+}
+.fc-t{top:-16px;right:-16px}
+.fc-b{bottom:20px;left:-20px}
+.fc-icon{font-size:20px}
+.fc-label{font-size:11px;font-weight:700;color:var(--ink);margin-bottom:1px}
+.fc-sub{font-size:10px;color:var(--ink3)}
 
-    .hero-p {
-      font-size: 17px; color: var(--w40); line-height: 1.72;
-      max-width: 480px; margin-bottom: 40px;
-      animation: fadeUp 0.5s 0.2s ease both;
-    }
+/* ════════════════════
+   LOGOS BAR
+════════════════════ */
+.logos-bar{
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  padding:18px 48px;
+  display:flex;align-items:center;justify-content:center;gap:48px;
+  background:var(--bg);
+}
+.logos-label{font-size:12px;font-weight:600;color:var(--ink3);letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
+.logo-pill{font-size:13px;font-weight:700;color:var(--ink3);padding:5px 14px;border-radius:6px;border:1px solid var(--rule);background:var(--white)}
 
-    .cta-wrap { animation: fadeUp 0.5s 0.3s ease both; }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: var(--amber); color: #07080D;
-      padding: 16px 36px; border-radius: 10px;
-      font-weight: 800; font-size: 16px; letter-spacing: -0.3px;
-      transition: transform 0.2s, box-shadow 0.2s;
-      animation: glow 3s ease infinite;
-    }
-    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 40px var(--amber-glow); }
-    .cta-note { font-size:12px; color:var(--w20); margin-top:12px; }
+/* ════════════════════
+   SECTIONS
+════════════════════ */
+section{padding:80px 0}
+.wrap{max-width:1160px;margin:0 auto;padding:0 48px}
+.section-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11.5px;font-weight:700;color:var(--amber);
+  text-transform:uppercase;letter-spacing:1.5px;
+  margin-bottom:12px;
+}
+.section-tag::before{content:'';width:16px;height:2px;background:var(--amber);border-radius:2px}
+h2{
+  font-family:var(--serif);
+  font-size:clamp(28px,3.5vw,44px);
+  font-weight:400;letter-spacing:-.3px;
+  line-height:1.12;color:var(--ink);
+  margin-bottom:14px;
+}
+h2 em{font-style:italic;color:var(--amber)}
+.section-sub{font-size:16px;color:var(--ink2);line-height:1.65;max-width:540px}
+.alt{background:var(--bg)}
 
-    .stats {
-      display:flex; gap:40px; margin-top:56px;
-      padding-top:40px; border-top:1px solid var(--w08);
-      animation: fadeUp 0.5s 0.4s ease both;
-    }
-    .stat-num  { font-family:var(--font-head); font-size:34px; font-weight:900; color:var(--amber); letter-spacing:-1px; line-height:1; }
-    .stat-label{ font-size:12px; color:var(--w40); margin-top:5px; }
+/* ════════════════════
+   HOW IT WORKS
+════════════════════ */
+.how-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;gap:32px}
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+.how-card{background:var(--white);padding:28px 22px;transition:background .2s}
+.how-card:hover{background:var(--bg)}
+.how-n{font-family:var(--serif);font-size:44px;font-weight:400;color:var(--rule);line-height:1;margin-bottom:16px}
+.how-icon{font-size:24px;margin-bottom:12px}
+.how-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.how-body{font-size:13px;color:var(--ink3);line-height:1.65}
 
-    /* ── HERO VISUAL ── */
-    .hero-right {
-      position:relative; display:flex;
-      justify-content:center; align-items:center;
-      animation: fadeUp 0.6s 0.2s ease both;
-    }
-    .chat-preview {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--w08);
-      border-radius: 20px; overflow:hidden;
-      width:100%; max-width:420px;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-      animation: float 6s ease infinite;
-    }
-    .cp-header {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 18px; border-bottom:1px solid var(--w08);
-      background:rgba(255,255,255,0.03);
-    }
-    .cp-dots { display:flex; gap:6px; }
-    .cp-dot  { width:10px; height:10px; border-radius:50%; }
-    .cp-title { font-size:14px; font-weight:700; color:var(--w60); }
-    .cp-live  { display:flex; align-items:center; gap:5px; font-size:11px; color:#4ADE80; }
-    .cp-live-dot { width:6px; height:6px; border-radius:50%; background:#4ADE80; box-shadow:0 0 6px #4ADE80; animation:pulse 2s infinite; }
-    .cp-body  { padding:18px 16px; }
-    .cp-ai-bubble {
-      background:var(--w08); border-radius:4px 12px 12px 12px;
-      padding:10px 14px; font-size:13px; color:rgba(255,255,255,0.82);
-      max-width:80%; line-height:1.5; margin-bottom:8px;
-    }
-    .cp-user-bubble {
-      background:rgba(245,166,35,0.18); border:1px solid rgba(245,166,35,0.25);
-      border-radius:12px 4px 12px 12px;
-      padding:10px 14px; font-size:13px; color:var(--white);
-      max-width:80%; line-height:1.5; margin-bottom:8px; margin-left:auto;
-    }
-    .cp-row    { display:flex; }
-    .cp-row.right { justify-content:flex-end; }
-    .cp-typing {
-      display:flex; gap:5px; padding:10px 14px;
-      background:var(--w08); border-radius:4px 12px 12px 12px;
-      width:fit-content; margin-top:4px;
-    }
-    .cp-typing span {
-      width:6px; height:6px; border-radius:50%;
-      background:var(--amber); display:block;
-      animation: bounce 1.2s infinite;
-    }
-    .cp-typing span:nth-child(2) { animation-delay:0.2s; }
-    .cp-typing span:nth-child(3) { animation-delay:0.4s; }
+/* ════════════════════
+   FEATURES (3-col)
+════════════════════ */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.feat-card{
+  background:var(--white);border:1px solid var(--rule);
+  border-radius:12px;padding:28px 24px;
+  transition:all .2s;
+}
+.feat-card:hover{border-color:var(--ink2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.07)}
+.feat-icon{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px}
+.feat-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.feat-body{font-size:13px;color:var(--ink3);line-height:1.65}
 
-    .float-card {
-      position:absolute;
-      background:rgba(7,8,13,0.92); border:1px solid var(--w08);
-      border-radius:12px; padding:12px 16px;
-      display:flex; align-items:center; gap:10px;
-      backdrop-filter:blur(12px);
-      box-shadow:0 8px 32px rgba(0,0,0,0.5);
-    }
-    .fc-top  { top:10px; right:-20px; }
-    .fc-bot  { bottom:30px; left:-24px; }
-    .fc-icon { font-size:22px; }
-    .fc-title{ font-size:13px; font-weight:700; }
-    .fc-sub  { font-size:11px; color:var(--w40); margin-top:2px; }
+/* ════════════════════
+   INDUSTRIES
+════════════════════ */
+.ind-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ind-card{
+  background:var(--white);border:1px solid var(--rule);
+  border-radius:12px;padding:22px 20px;
+  display:flex;gap:14px;align-items:flex-start;
+  transition:all .2s;
+}
+.ind-card:hover{border-color:var(--ink);box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.ind-icon-wrap{width:42px;height:42px;flex-shrink:0;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.ind-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.ind-desc{font-size:12.5px;color:var(--ink3);line-height:1.55}
+.ind-roi{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:6px}
 
-    /* ── SECTIONS ── */
-    section { padding: 100px 0; }
-    .section-inner { max-width:1200px; margin:0 auto; padding:0 48px; }
-    .eyebrow {
-      font-size:11px; font-weight:700; color:var(--amber);
-      text-transform:uppercase; letter-spacing:2.5px; margin-bottom:14px;
-    }
-    h2 {
-      font-family: var(--font-head);
-      font-size: clamp(30px, 4vw, 52px);
-      font-weight: 900; letter-spacing:-1.5px;
-      line-height:1.06; margin-bottom:56px;
-    }
-    .alt-bg { background: rgba(255,255,255,0.015); }
+/* ════════════════════
+   TESTIMONIALS
+════════════════════ */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.testi-card{
+  background:var(--white);border:1px solid var(--rule);
+  border-radius:12px;padding:24px;
+}
+.testi-stars{font-size:14px;margin-bottom:12px;color:var(--amber)}
+.testi-text{font-size:14px;color:var(--ink2);line-height:1.65;margin-bottom:16px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:10px}
+.testi-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--white);flex-shrink:0}
+.testi-name{font-size:13px;font-weight:700;color:var(--ink)}
+.testi-role{font-size:11.5px;color:var(--ink3)}
 
-    /* ── HOW IT WORKS ── */
-    .how-grid {
-      display:grid; grid-template-columns:repeat(4,1fr); gap:20px;
-    }
-    .how-card {
-      background:var(--w05); border:1px solid var(--w08);
-      border-radius:var(--radius); padding:28px 22px;
-      transition: border-color 0.3s, transform 0.3s;
-    }
-    .how-card:hover { border-color:rgba(245,166,35,0.35); transform:translateY(-4px); }
-    .how-num  { font-family:var(--font-head); font-size:52px; font-weight:900; color:rgba(245,166,35,0.18); line-height:1; margin-bottom:16px; }
-    .how-title{ font-size:16px; font-weight:700; margin-bottom:10px; }
-    .how-body { font-size:13.5px; color:var(--w40); line-height:1.65; }
+/* ════════════════════
+   PRICING
+════════════════════ */
+.pricing-header{text-align:center;margin-bottom:48px}
+.pricing-header .section-tag{justify-content:center}
+.pricing-header .section-sub{margin:0 auto}
+.plans-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
+.plan{
+  background:var(--white);border:1px solid var(--rule);
+  border-radius:14px;padding:28px 24px;
+  position:relative;transition:all .2s;
+}
+.plan:hover{box-shadow:0 12px 32px rgba(0,0,0,.08);transform:translateY(-2px)}
+.plan.pop{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.plan-badge{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--white);
+  font-size:11px;font-weight:700;padding:4px 14px;
+  border-radius:100px;white-space:nowrap;letter-spacing:.2px;
+}
+.plan-name{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ink3);margin-bottom:12px}
+.plan-price-wrap{display:flex;align-items:baseline;gap:1px;margin-bottom:6px}
+.plan-dollar{font-size:20px;font-weight:700;color:var(--ink2)}
+.plan-price{font-family:var(--serif);font-size:52px;font-weight:400;color:var(--ink);line-height:1;letter-spacing:-1px}
+.plan-per{font-size:13px;color:var(--ink3);margin-left:4px}
+.plan-desc{font-size:13px;color:var(--ink3);margin-bottom:20px;line-height:1.5}
+.plan-div{height:1px;background:var(--rule);margin-bottom:18px}
+.plan-feat{display:flex;gap:9px;font-size:13px;color:var(--ink2);margin-bottom:9px;align-items:flex-start}
+.plan-ck{font-weight:700;color:var(--green);flex-shrink:0}
+.plan-btn{
+  width:100%;margin-top:20px;padding:12px;
+  border-radius:8px;font-weight:700;font-size:13.5px;
+  transition:all .2s;letter-spacing:-.1px;
+}
+.plan-btn.dark{background:var(--ink);color:var(--white);border:1px solid var(--ink)}
+.plan-btn.dark:hover{background:#1a1a2e}
+.plan-btn.outline{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+.plan-btn.outline:hover{border-color:var(--ink)}
 
-    /* ── NICHES ── */
-    .niche-grid {
-      display:grid; grid-template-columns:repeat(3,1fr); gap:18px;
-    }
-    .niche-card {
-      background:var(--w05); border:1px solid var(--w08);
-      border-radius:var(--radius); padding:28px 22px;
-      transition:all 0.3s;
-    }
-    .niche-card:hover { border-color:rgba(245,166,35,0.3); transform:translateY(-4px); }
-    .niche-icon  { font-size:36px; margin-bottom:14px; }
-    .niche-roi   {
-      display:inline-block;
-      background:var(--amber-dim); border:1px solid rgba(245,166,35,0.2);
-      border-radius:100px; padding:3px 10px;
-      font-size:11px; font-weight:700; color:var(--amber); margin-bottom:12px;
-    }
-    .niche-title { font-size:17px; font-weight:700; margin-bottom:8px; }
-    .niche-desc  { font-size:13px; color:var(--w40); line-height:1.6; }
+/* ════════════════════
+   FAQ
+════════════════════ */
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+.faq-item{padding:22px 24px;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);cursor:pointer;transition:background .15s}
+.faq-item:nth-child(even){border-right:none}
+.faq-item:nth-last-child(1),.faq-item:nth-last-child(2){border-bottom:none}
+.faq-item:hover{background:var(--bg)}
+.faq-q{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.faq-a{font-size:13px;color:var(--ink3);line-height:1.6}
 
-    /* ── PRICING ── */
-    .pricing-note { font-size:15px; color:var(--w40); margin-top:-36px; margin-bottom:48px; }
-    .plans-grid   { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-    .plan-card {
-      background:var(--w05); border:1.5px solid var(--w08);
-      border-radius:18px; padding:32px 26px;
-      position:relative; transition:transform 0.2s;
-    }
-    .plan-card:hover { transform:translateY(-4px); }
-    .plan-card.pop {
-      background:rgba(0,229,255,0.04);
-      box-shadow:0 0 60px rgba(0,229,255,0.07);
-    }
-    .plan-badge {
-      position:absolute; top:-13px; left:50%; transform:translateX(-50%);
-      font-size:11px; font-weight:800; padding:4px 16px;
-      border-radius:100px; white-space:nowrap; letter-spacing:0.3px;
-      color:#07080D;
-    }
-    .plan-name  { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px; }
-    .plan-price-row { display:flex; align-items:baseline; margin-bottom:6px; }
-    .plan-dollar{ font-size:22px; font-weight:900; color:var(--w60); margin-right:2px; }
-    .plan-price { font-family:var(--font-head); font-size:58px; font-weight:900; letter-spacing:-3px; line-height:1; }
-    .plan-per   { font-size:13px; color:var(--w40); margin-left:4px; }
-    .plan-desc  { font-size:13px; color:var(--w40); margin-bottom:20px; line-height:1.5; }
-    .plan-div   { height:1px; background:var(--w08); margin-bottom:20px; }
-    .plan-feat  { display:flex; gap:10px; font-size:14px; color:rgba(255,255,255,0.72); margin-bottom:10px; align-items:flex-start; }
-    .plan-feat .ck { font-weight:800; }
-    .plan-btn {
-      width:100%; margin-top:24px; padding:13px;
-      border-radius:10px; border:1.5px solid;
-      font-weight:800; font-size:14px; letter-spacing:-0.2px;
-      transition:all 0.2s;
-    }
-    .plan-btn:hover { transform:translateY(-1px); }
+/* ════════════════════
+   FINAL CTA
+════════════════════ */
+.cta-section{
+  background:var(--ink);color:var(--white);
+  padding:80px 48px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 120%,rgba(217,119,6,.2) 0%,transparent 60%);
+  pointer-events:none;
+}
+.cta-inner{position:relative;z-index:1;max-width:640px;margin:0 auto}
+.cta-eyebrow{font-size:11.5px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
+.cta-section h2{font-family:var(--serif);font-size:clamp(28px,4vw,46px);font-weight:400;color:var(--white);margin-bottom:16px;letter-spacing:-.3px}
+.cta-section h2 em{font-style:italic;color:var(--amber)}
+.cta-p{font-size:15px;color:rgba(255,255,255,.55);margin-bottom:36px;line-height:1.65}
+.btn-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--white);color:var(--ink);
+  padding:15px 36px;border-radius:9px;
+  font-weight:800;font-size:15px;letter-spacing:-.2px;
+  transition:all .2s;
+}
+.btn-cta:hover{background:var(--amber-l);transform:translateY(-2px)}
+.cta-note{font-size:12px;color:rgba(255,255,255,.3);margin-top:14px}
+.cta-platforms{display:flex;justify-content:center;gap:16px;margin-top:32px}
+.cta-platform{font-size:12px;font-weight:600;color:rgba(255,255,255,.25);letter-spacing:.5px}
 
-    /* ── FINAL CTA ── */
-    #cta {
-      text-align:center; padding:120px 48px;
-      position:relative; overflow:hidden;
-    }
-    .cta-glow {
-      position:absolute; top:50%; left:50%;
-      transform:translate(-50%,-50%);
-      width:900px; height:500px;
-      background:radial-gradient(ellipse, rgba(245,166,35,0.08) 0%, transparent 70%);
-      pointer-events:none;
-    }
-    .cta-inner { position:relative; z-index:1; max-width:720px; margin:0 auto; }
-    #cta h2   { margin-bottom:20px; margin-top:14px; }
-    .cta-sub  { font-size:17px; color:var(--w40); margin-bottom:40px; line-height:1.65; }
-    .cta-logos{ display:flex; justify-content:center; gap:24px; margin-top:32px; }
-    .cta-logo { font-size:13px; color:rgba(255,255,255,0.18); font-weight:600; letter-spacing:0.5px; }
+/* ════════════════════
+   FOOTER
+════════════════════ */
+footer{
+  background:var(--bg);border-top:1px solid var(--rule);
+  padding:40px 48px 24px;
+}
+.footer-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:40px;margin-bottom:40px;
+}
+.footer-brand .nav-logo{font-size:18px}
+.footer-desc{font-size:13px;color:var(--ink3);line-height:1.65;margin-top:10px;max-width:240px}
+.footer-col-title{font-size:12px;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+.footer-links{display:flex;flex-direction:column;gap:8px}
+.footer-links a{font-size:13px;color:var(--ink3);transition:color .15s}
+.footer-links a:hover{color:var(--ink)}
+.footer-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--rule);padding-top:20px;
+  font-size:12px;color:var(--ink3);
+}
 
-    /* ── FOOTER ── */
-    footer {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:22px 48px; border-top:1px solid var(--w08);
-      flex-wrap:wrap; gap:12px;
-    }
-    .footer-links { display:flex; gap:24px; }
-    .footer-links a { font-size:13px; color:rgba(255,255,255,0.28); transition:color 0.2s; }
-    .footer-links a:hover { color:var(--w60); }
-    .footer-copy { font-size:12px; color:rgba(255,255,255,0.18); }
+/* ════════════════════
+   CHAT VIEW
+════════════════════ */
+#chat-view{display:none;flex-direction:column;height:100vh;background:var(--white)}
+#chat-view.active{display:flex}
+#landing-view.hidden{display:none}
 
-    /* ── CHAT VIEW ── */
-    #chat-view {
-      display:none; flex-direction:column;
-      height:100vh; background:var(--bg);
-    }
-    #chat-view.active { display:flex; }
-    #landing-view.hidden { display:none; }
+.chat-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;height:60px;
+  border-bottom:1px solid var(--rule);
+  background:var(--white);flex-shrink:0;
+}
+.chat-brand-wrap{display:flex;align-items:center;gap:10px}
+.chat-avatar{
+  width:34px;height:34px;border-radius:9px;
+  background:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;color:var(--white);
+}
+.chat-brand-name{font-size:15px;font-weight:700;color:var(--ink)}
+.chat-brand-name span{color:var(--amber)}
+.chat-online{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--green)}
+.chat-online-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.btn-back{
+  background:transparent;border:1px solid var(--rule);
+  color:var(--ink2);padding:7px 14px;border-radius:7px;
+  font-size:13px;font-weight:500;transition:all .15s;
+}
+.btn-back:hover{border-color:var(--ink2);color:var(--ink)}
 
-    .chat-nav {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 24px; border-bottom:1px solid var(--w08);
-      background:rgba(7,8,13,0.98); flex-shrink:0;
-    }
-    .btn-back {
-      background:none; border:1px solid rgba(255,255,255,0.12);
-      color:var(--w40); padding:7px 14px; border-radius:8px;
-      font-size:13px; font-family:var(--font-body);
-      transition:all 0.2s;
-    }
-    .btn-back:hover { border-color:var(--w40); color:var(--white); }
+/* Progress */
+.chat-prog{
+  display:flex;padding:10px 16px;gap:2px;
+  border-bottom:1px solid var(--rule);
+  background:var(--bg);overflow-x:auto;flex-shrink:0;
+}
+.prog-item{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:52px}
+.prog-dot{
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;
+  background:var(--rule);color:var(--ink3);
+  transition:all .3s;
+}
+.prog-dot.done{background:var(--ink);color:var(--white)}
+.prog-dot.active{background:var(--amber);color:var(--white);box-shadow:0 0 12px rgba(217,119,6,.4);transform:scale(1.1)}
+.prog-lbl{font-size:9px;font-weight:600;color:var(--ink3);text-align:center;transition:color .3s;letter-spacing:.2px}
+.prog-lbl.active{color:var(--amber)}
+.prog-lbl.done{color:var(--ink)}
 
-    .chat-brand { display:flex; align-items:center; gap:8px; }
-    .chat-avatar-small {
-      width:32px; height:32px; border-radius:50%;
-      background:linear-gradient(135deg,#F5A623,#FF6B35);
-      display:flex; align-items:center; justify-content:center;
-      font-size:14px; font-weight:900; color:#fff;
-    }
-    .chat-brand-name { font-size:17px; font-weight:800; }
-    .chat-brand-name span { color:var(--amber); }
+/* Messages */
+.chat-msgs{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;background:var(--bg)}
+.msg-row{display:flex;margin-bottom:12px;animation:slideIn .3s ease}
+.msg-row.user{justify-content:flex-end}
+.msg-av{
+  width:32px;height:32px;border-radius:9px;
+  background:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;color:var(--white);
+  flex-shrink:0;margin-right:8px;align-self:flex-end;
+}
+.bubble-ai{
+  background:var(--white);border:1px solid var(--rule);
+  border-radius:4px 14px 14px 14px;
+  padding:11px 15px;font-size:14px;line-height:1.65;
+  max-width:74%;color:var(--ink2);
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.bubble-user{
+  background:var(--ink);color:var(--white);
+  border-radius:14px 4px 14px 14px;
+  padding:11px 15px;font-size:14px;line-height:1.65;
+  max-width:74%;
+}
+.typing-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:12px}
+.typing-bubble{
+  background:var(--white);border:1px solid var(--rule);
+  border-radius:4px 14px 14px 14px;
+  padding:12px 16px;display:flex;gap:5px;align-items:center;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.typing-bubble span{width:6px;height:6px;border-radius:50%;background:var(--ink3);display:block;animation:bounce 1.2s infinite}
+.typing-bubble span:nth-child(2){animation-delay:.2s}
+.typing-bubble span:nth-child(3){animation-delay:.4s}
 
-    .chat-status { display:flex; align-items:center; gap:6px; }
-    .status-dot  { width:8px; height:8px; border-radius:50%; background:#4ADE80; box-shadow:0 0 8px #4ADE80; animation:pulse 2s infinite; }
-    .status-txt  { font-size:12px; color:var(--w40); }
+/* Input */
+.chat-input-wrap{
+  display:flex;gap:8px;padding:12px 16px;
+  border-top:1px solid var(--rule);
+  background:var(--white);flex-shrink:0;
+}
+#chat-ta{
+  flex:1;background:var(--bg);border:1px solid var(--rule);
+  border-radius:10px;padding:11px 15px;
+  font-size:14.5px;color:var(--ink);resize:none;
+  line-height:1.5;min-height:48px;max-height:120px;
+  transition:border-color .2s;
+}
+#chat-ta:focus{border-color:var(--ink)}
+#chat-ta::placeholder{color:var(--ink3)}
+#send-btn{
+  width:48px;height:48px;border-radius:10px;
+  background:var(--ink);color:var(--white);
+  font-size:18px;font-weight:800;
+  align-self:flex-end;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;
+}
+#send-btn:hover:not(:disabled){background:#1a1a2e;transform:translateY(-1px)}
+#send-btn:disabled{opacity:.3;cursor:not-allowed}
 
-    /* Progress bar */
-    .chat-progress {
-      display:flex; padding:10px 20px; gap:4px;
-      border-bottom:1px solid rgba(255,255,255,0.05);
-      background:rgba(255,255,255,0.01); overflow-x:auto; flex-shrink:0;
-    }
-    .prog-item { display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; min-width:52px; }
-    .prog-dot  {
-      width:26px; height:26px; border-radius:50%;
-      display:flex; align-items:center; justify-content:center;
-      font-size:10px; font-weight:800; color:#07080D;
-      background:rgba(255,255,255,0.1);
-      transition:all 0.3s;
-    }
-    .prog-dot.active  { background:var(--amber); box-shadow:0 0 14px var(--amber); transform:scale(1.15); }
-    .prog-dot.done    { background:var(--amber); }
-    .prog-label { font-size:9px; font-weight:600; color:rgba(255,255,255,0.25); text-align:center; transition:color 0.3s; }
-    .prog-label.active { color:var(--amber); }
-
-    /* Messages */
-    .chat-messages {
-      flex:1; overflow-y:auto; padding:20px 16px;
-      display:flex; flex-direction:column;
-    }
-    .msg-row { display:flex; margin-bottom:14px; animation:slideIn 0.3s ease; }
-    .msg-row.user { justify-content:flex-end; }
-    .msg-avatar {
-      width:34px; height:34px; border-radius:50%;
-      background:linear-gradient(135deg,#F5A623,#FF6B35);
-      display:flex; align-items:center; justify-content:center;
-      font-size:14px; font-weight:900; color:#fff;
-      flex-shrink:0; margin-right:10px; align-self:flex-end;
-    }
-    .bubble-ai {
-      background:var(--w08); border:1px solid rgba(255,255,255,0.09);
-      border-radius:4px 16px 16px 16px;
-      padding:12px 16px; font-size:14.5px; line-height:1.65;
-      max-width:75%; color:rgba(255,255,255,0.88);
-    }
-    .bubble-user {
-      background:linear-gradient(135deg,rgba(245,166,35,0.22),rgba(255,107,53,0.18));
-      border:1px solid rgba(245,166,35,0.28);
-      border-radius:16px 4px 16px 16px;
-      padding:12px 16px; font-size:14.5px; line-height:1.65;
-      max-width:75%; color:var(--white);
-    }
-    .typing-box {
-      background:var(--w08); border:1px solid rgba(255,255,255,0.09);
-      border-radius:4px 16px 16px 16px;
-      padding:14px 18px; display:flex; gap:6px; align-items:center;
-    }
-    .typing-box span {
-      width:7px; height:7px; border-radius:50%;
-      background:var(--amber); display:block;
-      animation:bounce 1.2s infinite;
-    }
-    .typing-box span:nth-child(2) { animation-delay:0.2s; }
-    .typing-box span:nth-child(3) { animation-delay:0.4s; }
-
-    /* Chat input */
-    .chat-input-wrap {
-      display:flex; gap:10px; padding:14px 16px;
-      border-top:1px solid var(--w08);
-      background:rgba(255,255,255,0.02); flex-shrink:0;
-    }
-    #chat-textarea {
-      flex:1; background:rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.12);
-      border-radius:12px; padding:13px 16px;
-      font-size:15px; color:var(--white);
-      resize:none; line-height:1.5; min-height:50px;
-      transition:border-color 0.2s;
-    }
-    #chat-textarea:focus { border-color:rgba(245,166,35,0.4); }
-    #chat-textarea::placeholder { color:var(--w20); }
-    #send-btn {
-      width:50px; height:50px; border-radius:12px;
-      background:linear-gradient(135deg,#F5A623,#FF6B35);
-      border:none; color:#fff; font-size:20px; font-weight:900;
-      align-self:flex-end; transition:opacity 0.2s, transform 0.2s;
-    }
-    #send-btn:hover:not(:disabled) { transform:translateY(-2px); }
-    #send-btn:disabled { opacity:0.35; cursor:not-allowed; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      nav { padding:16px 20px; }
-      .nav-links { display:none; }
-      #hero { grid-template-columns:1fr; gap:40px; padding:48px 20px 60px; min-height:auto; }
-      .hero-right { display:none; }
-      .stats { gap:24px; }
-      .section-inner { padding:0 20px; }
-      .how-grid { grid-template-columns:repeat(2,1fr); }
-      .niche-grid { grid-template-columns:repeat(2,1fr); }
-      .plans-grid { grid-template-columns:1fr; max-width:400px; margin:0 auto; }
-      #cta { padding:80px 20px; }
-      footer { padding:20px; flex-direction:column; align-items:flex-start; }
-      .chat-progress { gap:2px; }
-      .prog-label { display:none; }
-    }
-    @media (max-width: 560px) {
-      h1 { letter-spacing:-1px; }
-      .how-grid { grid-template-columns:1fr; }
-      .niche-grid { grid-template-columns:1fr; }
-    }
-  </style>
+/* ════════════════════
+   RESPONSIVE
+════════════════════ */
+@media(max-width:960px){
+  nav{padding:0 20px}
+  .nav-center{display:none}
+  .hero{grid-template-columns:1fr;gap:40px;padding:48px 20px 60px}
+  .hero-right{display:none}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .wrap{padding:0 20px}
+  .logos-bar{padding:16px 20px;gap:20px;flex-wrap:wrap}
+  .how-grid{grid-template-columns:repeat(2,1fr)}
+  .features-grid{grid-template-columns:1fr}
+  .ind-grid{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .plans-row{grid-template-columns:1fr;max-width:380px;margin:0 auto}
+  .faq-grid{grid-template-columns:1fr}
+  .faq-item{border-right:none!important}
+  .faq-item:nth-last-child(2){border-bottom:1px solid var(--rule)!important}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .footer-bottom{flex-direction:column;gap:8px;text-align:center}
+  .cta-section{padding:60px 20px}
+  footer{padding:32px 20px 20px}
+}
+@media(max-width:560px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .how-grid{grid-template-columns:1fr}
+  .ind-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════
-     LANDING VIEW
-══════════════════════════════════════════ -->
+<!-- ══════ LANDING ══════ -->
 <div id="landing-view">
 
-  <!-- NAV -->
-  <nav>
-    <div class="nav-brand">
-      <span class="nav-logo">AdWise</span>
-      <span class="nav-ca">Canada</span>
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <span class="nav-logo">AdWise</span>
+    <span class="nav-ca">Canada</span>
+  </div>
+  <div class="nav-center">
+    <a class="nav-link" href="#how">How it works</a>
+    <a class="nav-link" href="#features">Features</a>
+    <a class="nav-link" href="#industries">Industries</a>
+    <a class="nav-link" href="#pricing">Pricing</a>
+    <a class="nav-link" href="#faq">FAQ</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-ghost" onclick="openChat()">Sign in</button>
+    <button class="btn-primary" onclick="openChat()">Get Started Free →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-badge"><div class="hero-badge-dot"></div>Built for Canadian small businesses</div>
+    <h1>Advertising that <em>runs itself</em> — from $149 CAD/mo</h1>
+    <p class="hero-p">AdWise uses AI to launch and optimize your Meta, Google, and TikTok ads automatically. Tell us your goal, connect your account, watch customers come in.</p>
+    <div class="hero-actions">
+      <button class="btn-hero" onclick="openChat()">Launch My First Campaign <span>→</span></button>
+      <button class="btn-hero-sec" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">See how it works</button>
     </div>
-    <div class="nav-links">
-      <a href="#how-it-works">How it works</a>
-      <a href="#industries">Industries</a>
-      <a href="#pricing">Pricing</a>
+    <div class="hero-note">Free to start · No credit card required · Setup in 3 minutes</div>
+    <div style="height:32px"></div>
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-num"><em>3</em> min</div>
+        <div class="stat-label">Average setup time</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num"><em>4.8</em>×</div>
+        <div class="stat-label">Average client ROI</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num"><em>500</em>+</div>
+        <div class="stat-label">Businesses launched</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" style="font-size:22px">$<em>149</em></div>
+        <div class="stat-label">Starting CAD/mo</div>
+      </div>
     </div>
-    <button class="btn-nav" onclick="openChat()">Start Free →</button>
-  </nav>
-
-  <!-- HERO -->
-  <section id="hero">
-    <div class="hero-glow-1"></div>
-    <div class="hero-glow-2"></div>
-
-    <div class="hero-left">
-      <div class="badge fade-up">
-        <div class="badge-dot"></div>
-        AI-Powered · Canadian Businesses Only
+  </div>
+  <div class="hero-right">
+    <div class="hero-card">
+      <div class="hc-header">
+        <div class="hc-dots">
+          <div class="hc-dot" style="background:#FF5F57"></div>
+          <div class="hc-dot" style="background:#FFBD2E"></div>
+          <div class="hc-dot" style="background:#28CA41"></div>
+        </div>
+        <div class="hc-title">AdWise AI Consultant</div>
+        <div class="hc-live"><div class="hc-live-dot"></div>Live</div>
       </div>
-
-      <h1 class="fade-up" style="animation-delay:0.1s">
-        Your ads.<br>
-        <span class="accent">Launched in minutes.</span><br>
-        Not months.
-      </h1>
-
-      <p class="hero-p" style="animation-delay:0.2s">
-        AdWise is the AI that runs your Meta, Google, and TikTok ads automatically. Tell us your goal, connect your account, and watch customers arrive. No agency. No complexity. Just results.
-      </p>
-
-      <div class="cta-wrap" style="animation-delay:0.3s">
-        <button class="btn-primary" onclick="openChat()">
-          Launch My First Campaign
-          <span>→</span>
-        </button>
-        <div class="cta-note">Free to start · No credit card required</div>
+      <div class="hc-body">
+        <div class="hc-row"><div class="hc-ai">Hey! What kind of business do you run and where are you located?</div></div>
+        <div class="hc-row r"><div class="hc-user">Dental clinic in Calgary, AB</div></div>
+        <div class="hc-row"><div class="hc-ai">Great! What's your monthly ad budget in CAD?</div></div>
+        <div class="hc-row r"><div class="hc-user">Around $800/month</div></div>
+        <div class="hc-row"><div class="hc-ai">Analyzing Calgary dental competitors...</div></div>
+        <div class="hc-typing"><span></span><span></span><span></span></div>
       </div>
+    </div>
+    <div class="fc fc-t">
+      <div class="fc-icon">📈</div>
+      <div><div class="fc-label">Campaign Live</div><div class="fc-sub">18 leads this week</div></div>
+    </div>
+    <div class="fc fc-b">
+      <div class="fc-icon">💰</div>
+      <div><div class="fc-label">Cost per lead</div><div class="fc-sub">$12.40 CAD avg</div></div>
+    </div>
+  </div>
+</div>
 
-      <div class="stats">
+<!-- LOGOS BAR -->
+<div class="logos-bar">
+  <span class="logos-label">Runs ads on</span>
+  <span class="logo-pill">Meta Ads</span>
+  <span class="logo-pill">Google Ads</span>
+  <span class="logo-pill">Instagram</span>
+  <span class="logo-pill">TikTok Ads</span>
+  <span class="logo-pill">Google Search</span>
+  <span class="logo-pill">Display Network</span>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="wrap">
+    <div class="how-header">
+      <div>
+        <div class="section-tag">How it works</div>
+        <h2>From conversation to<br><em>live campaign in minutes</em></h2>
+      </div>
+      <p class="section-sub" style="max-width:320px;font-size:14px">No marketing knowledge required. Our AI handles strategy, targeting, copywriting, and launch — automatically.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-n">01</div>
+        <div class="how-icon">💬</div>
+        <div class="how-title">Tell us about your business</div>
+        <div class="how-body">Chat with our AI for 3 minutes. Describe your business, goal, and budget. No forms, no jargon — just a conversation.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-n">02</div>
+        <div class="how-icon">🔍</div>
+        <div class="how-title">AI analyzes your market</div>
+        <div class="how-body">We study competitor ads in Meta Ad Library, identify winning audiences, and build a custom campaign strategy for you.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-n">03</div>
+        <div class="how-icon">🔗</div>
+        <div class="how-title">Connect your ad account</div>
+        <div class="how-body">One click to connect Facebook or Google via OAuth. Your budget goes directly to the platform — we never touch your money.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-n">04</div>
+        <div class="how-icon">🚀</div>
+        <div class="how-title">Campaigns launch & optimize</div>
+        <div class="how-body">AdWise creates, launches, and auto-optimizes your ads every week. Live dashboard shows results in real time.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="alt">
+  <div class="wrap">
+    <div class="section-tag">Platform Features</div>
+    <h2>Everything you need.<br><em>Nothing you don't.</em></h2>
+    <p class="section-sub" style="margin-bottom:44px">AdWise replaces your entire marketing team with one AI that works 24/7.</p>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon" style="background:#FEF3C7">🤖</div>
+        <div class="feat-title">AI Campaign Strategy</div>
+        <div class="feat-body">Our AI interviews you, understands your business, and builds a data-driven campaign strategy — the same work a $3,000/mo agency does.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:#EFF6FF">📊</div>
+        <div class="feat-title">Competitor Intelligence</div>
+        <div class="feat-body">We scan Meta Ad Library and Google to see exactly what your competitors are running — then build a strategy to outperform them.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:#ECFDF5">✍️</div>
+        <div class="feat-title">AI Copywriting</div>
+        <div class="feat-body">AdWise writes your ad headlines, body copy, and calls-to-action — tested against thousands of high-converting Canadian ads.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:#FDF4FF">🎯</div>
+        <div class="feat-title">Precision Targeting</div>
+        <div class="feat-body">Hyper-local targeting by postal code, demographics, interests, and behaviours — so your ads reach exactly the right Canadians.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:#FFF7ED">⚡</div>
+        <div class="feat-title">Auto-Optimization</div>
+        <div class="feat-body">Every week, AI reviews performance data, pauses underperformers, scales winners, and adjusts bids — automatically, without you lifting a finger.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:#F0FDF4">🌐</div>
+        <div class="feat-title">Website Audit & Build</div>
+        <div class="feat-body">No website? We'll build one in 5 days for $299 CAD. Bad website? We'll audit it and show you what's costing you conversions.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section id="industries">
+  <div class="wrap">
+    <div class="section-tag">Industries</div>
+    <h2>Built for Canadian<br><em>small businesses</em></h2>
+    <p class="section-sub" style="margin-bottom:40px">We've launched thousands of campaigns across every major Canadian industry. Here's where AdWise performs best.</p>
+    <div class="ind-grid">
+      <div class="ind-card">
+        <div class="ind-icon-wrap" style="background:#FEF3C7">🔨</div>
         <div>
-          <div class="stat-num">3 min</div>
-          <div class="stat-label">Average setup time</div>
+          <div class="ind-title">Contractors & Trades</div>
+          <div class="ind-desc">Roofing, HVAC, renovation, plumbing, electrical. High-ticket jobs with hyper-local reach.</div>
+          <div class="ind-roi" style="background:#FEF3C7;color:#92400E">Up to 20× ROI</div>
         </div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon-wrap" style="background:#EFF6FF">🦷</div>
         <div>
-          <div class="stat-num">4.8×</div>
-          <div class="stat-label">Average client ROI</div>
+          <div class="ind-title">Dental & Medical Clinics</div>
+          <div class="ind-desc">Fill your calendar with new patients. Target by location, age, and health intent.</div>
+          <div class="ind-roi" style="background:#EFF6FF;color:#1D4ED8">Up to 15× ROI</div>
         </div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon-wrap" style="background:#ECFDF5">🍽️</div>
         <div>
-          <div class="stat-num">500+</div>
-          <div class="stat-label">Businesses served</div>
+          <div class="ind-title">Restaurants & Cafés</div>
+          <div class="ind-desc">Drive foot traffic, reservations, and takeout orders with hyper-local targeting within 5km.</div>
+          <div class="ind-roi" style="background:#ECFDF5;color:#059669">Up to 8× ROI</div>
         </div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon-wrap" style="background:#FDF4FF">⚖️</div>
         <div>
-          <div class="stat-num">$149</div>
-          <div class="stat-label">Starting CAD/mo</div>
+          <div class="ind-title">Law Firms</div>
+          <div class="ind-desc">Generate qualified consultations with precision targeting by legal need and life events.</div>
+          <div class="ind-roi" style="background:#FDF4FF;color:#7E22CE">Up to 25× ROI</div>
         </div>
       </div>
-    </div>
-
-    <!-- HERO VISUAL -->
-    <div class="hero-right">
-      <div class="chat-preview">
-        <div class="cp-header">
-          <div class="cp-dots">
-            <div class="cp-dot" style="background:#FF5F57"></div>
-            <div class="cp-dot" style="background:#FFBD2E"></div>
-            <div class="cp-dot" style="background:#28CA41"></div>
-          </div>
-          <div class="cp-title">AdWise AI</div>
-          <div class="cp-live"><div class="cp-live-dot"></div> Live</div>
-        </div>
-        <div class="cp-body">
-          <div class="cp-row"><div class="cp-ai-bubble">Hey! What kind of business do you run, and where are you located?</div></div>
-          <div class="cp-row right"><div class="cp-user-bubble">Dental clinic in Calgary, AB</div></div>
-          <div class="cp-row"><div class="cp-ai-bubble">Great! What's your monthly ad budget?</div></div>
-          <div class="cp-row right"><div class="cp-user-bubble">Around $800 CAD/month</div></div>
-          <div class="cp-row"><div class="cp-ai-bubble">Perfect. Analyzing Calgary dental competitors now...</div></div>
-          <div class="cp-typing"><span></span><span></span><span></span></div>
-        </div>
-      </div>
-      <div class="float-card fc-top">
-        <div class="fc-icon">📈</div>
+      <div class="ind-card">
+        <div class="ind-icon-wrap" style="background:#FFF7ED">🏋️</div>
         <div>
-          <div class="fc-title">Campaign Live</div>
-          <div class="fc-sub">18 leads this week</div>
+          <div class="ind-title">Fitness & Wellness</div>
+          <div class="ind-desc">Memberships, classes, and bookings with seasonal campaigns that convert at peak times.</div>
+          <div class="ind-roi" style="background:#FFF7ED;color:#C2410C">Up to 10× ROI</div>
         </div>
       </div>
-      <div class="float-card fc-bot">
-        <div class="fc-icon">💰</div>
+      <div class="ind-card">
+        <div class="ind-icon-wrap" style="background:#F0FDF4">🏡</div>
         <div>
-          <div class="fc-title">Cost per lead</div>
-          <div class="fc-sub">$12.40 CAD avg</div>
+          <div class="ind-title">Real Estate Agents</div>
+          <div class="ind-desc">Listings and buyer leads — target active movers and investors in your specific market.</div>
+          <div class="ind-roi" style="background:#F0FDF4;color:#166534">Up to 30× ROI</div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- HOW IT WORKS -->
-  <section id="how-it-works">
-    <div class="section-inner">
-      <div class="eyebrow">How it works</div>
-      <h2>From conversation<br>to live campaign</h2>
-      <div class="how-grid">
-        <div class="how-card">
-          <div class="how-num">01</div>
-          <div class="how-title">Tell us about your business</div>
-          <div class="how-body">Chat with our AI for 3 minutes. Describe your business, goals, and budget. No forms, no jargon — just a conversation.</div>
+<!-- TESTIMONIALS -->
+<section class="alt">
+  <div class="wrap">
+    <div class="section-tag">Results</div>
+    <h2>What Canadian businesses<br><em>are saying</em></h2>
+    <p class="section-sub" style="margin-bottom:40px">Real results from real businesses across Canada.</p>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"We were spending $1,200/month at an agency with mediocre results. AdWise launched our first campaign in 4 minutes and we got 23 new patient bookings that month. I'll never go back to an agency."</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#1D4ED8">DK</div>
+          <div><div class="testi-name">Dr. Kim Nguyen</div><div class="testi-role">Dental Clinic · Vancouver, BC</div></div>
         </div>
-        <div class="how-card">
-          <div class="how-num">02</div>
-          <div class="how-title">AI analyzes your market</div>
-          <div class="how-body">We study what your competitors are running in Meta Ad Library, identify winning audiences, and build your campaign strategy.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"I had zero marketing experience. AdWise asked me a few questions, set everything up, and within two weeks my phone was ringing non-stop. Best $349 I spend every month."</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#059669">MR</div>
+          <div><div class="testi-name">Mike Reeves</div><div class="testi-role">HVAC Contractor · Calgary, AB</div></div>
         </div>
-        <div class="how-card">
-          <div class="how-num">03</div>
-          <div class="how-title">Connect your ad account</div>
-          <div class="how-body">One click to connect Facebook or Google. Your budget goes directly to the platform — we never touch your money.</div>
-        </div>
-        <div class="how-card">
-          <div class="how-num">04</div>
-          <div class="how-title">Campaigns launch automatically</div>
-          <div class="how-body">AdWise creates and launches your ads via API. You see live results in your personal dashboard. AI optimizes weekly.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"I was skeptical about AI running my ads. But AdWise brought us 41 new clients last month at $8 per lead. Our previous agency was charging $45 per lead. The difference is insane."</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#D97706">SP</div>
+          <div><div class="testi-name">Sarah Patel</div><div class="testi-role">Yoga Studio · Toronto, ON</div></div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- INDUSTRIES -->
-  <section id="industries" class="alt-bg">
-    <div class="section-inner">
-      <div class="eyebrow">Industries</div>
-      <h2>Built for Canadian<br>small businesses</h2>
-      <div class="niche-grid">
-        <div class="niche-card">
-          <div class="niche-icon">🔨</div>
-          <div class="niche-roi">Up to 20× ROI</div>
-          <div class="niche-title">Contractors & Trades</div>
-          <div class="niche-desc">Roofing, HVAC, renovation, plumbing. High-ticket jobs with hyper-local targeting across Alberta and beyond.</div>
+<!-- PRICING -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="pricing-header">
+      <div class="section-tag" style="justify-content:center">Pricing</div>
+      <h2>Simple pricing.<br><em>All in Canadian dollars.</em></h2>
+      <p class="section-sub">Your ad budget goes directly to Meta or Google. We only charge for the AdWise platform.</p>
+    </div>
+    <div class="plans-row">
+      <div class="plan">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price-wrap">
+          <span class="plan-dollar">$</span>
+          <span class="plan-price">149</span>
+          <span class="plan-per">CAD/mo</span>
         </div>
-        <div class="niche-card">
-          <div class="niche-icon">🦷</div>
-          <div class="niche-roi">Up to 15× ROI</div>
-          <div class="niche-title">Dental & Medical</div>
-          <div class="niche-desc">Fill your calendar with new patients. Target by location, demographics, and health intent signals.</div>
+        <div class="plan-desc">For local shops, cafés, and service businesses just getting started</div>
+        <div class="plan-div"></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>1 platform — Meta or Google</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>AI campaign setup & launch</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Up to $1,000 CAD ad budget</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Weekly performance report</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Email support</span></div>
+        <button class="plan-btn outline" onclick="openChat()">Get Started</button>
+      </div>
+      <div class="plan pop">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Growth</div>
+        <div class="plan-price-wrap">
+          <span class="plan-dollar">$</span>
+          <span class="plan-price">349</span>
+          <span class="plan-per">CAD/mo</span>
         </div>
-        <div class="niche-card">
-          <div class="niche-icon">🍽️</div>
-          <div class="niche-roi">Up to 8× ROI</div>
-          <div class="niche-title">Restaurants & Cafés</div>
-          <div class="niche-desc">Drive foot traffic and reservations. Hyper-local targeting within 5km of your location.</div>
+        <div class="plan-desc">For contractors, clinics, and businesses ready to scale</div>
+        <div class="plan-div"></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Meta + Google Ads</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Competitor analysis included</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Up to $5,000 CAD ad budget</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Weekly auto-optimization</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Live chat support</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Website audit included</span></div>
+        <button class="plan-btn dark" onclick="openChat()">Get Started</button>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price-wrap">
+          <span class="plan-dollar">$</span>
+          <span class="plan-price">699</span>
+          <span class="plan-per">CAD/mo</span>
         </div>
-        <div class="niche-card">
-          <div class="niche-icon">⚖️</div>
-          <div class="niche-roi">Up to 25× ROI</div>
-          <div class="niche-title">Law Firms</div>
-          <div class="niche-desc">Generate qualified consultations. Precision targeting by legal need and life events.</div>
-        </div>
-        <div class="niche-card">
-          <div class="niche-icon">🏋️</div>
-          <div class="niche-roi">Up to 10× ROI</div>
-          <div class="niche-title">Fitness & Wellness</div>
-          <div class="niche-desc">Memberships, classes, and bookings. Seasonal campaigns that convert at peak times.</div>
-        </div>
-        <div class="niche-card">
-          <div class="niche-icon">🏡</div>
-          <div class="niche-roi">Up to 30× ROI</div>
-          <div class="niche-title">Real Estate Agents</div>
-          <div class="niche-desc">Listings and buyer leads. Target active movers and investors in your specific market.</div>
-        </div>
+        <div class="plan-desc">For high-spend businesses, law firms, and multi-location brands</div>
+        <div class="plan-div"></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Meta + Google + TikTok Ads</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Unlimited ad budget</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Priority AI optimization</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Dedicated account AI</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Phone support</span></div>
+        <div class="plan-feat"><span class="plan-ck">✓</span><span>Custom monthly report</span></div>
+        <button class="plan-btn outline" onclick="openChat()">Get Started</button>
       </div>
     </div>
-  </section>
+    <div style="text-align:center;margin-top:28px;font-size:13px;color:var(--ink3)">
+      Need a website? We build them for <strong>$299 CAD</strong> — 5-day turnaround, conversion-optimized. <a href="#" onclick="openChat();return false" style="color:var(--amber);font-weight:600">Ask us →</a>
+    </div>
+  </div>
+</section>
 
-  <!-- PRICING -->
-  <section id="pricing">
-    <div class="section-inner">
-      <div class="eyebrow">Pricing</div>
-      <h2>Simple, transparent<br>pricing in CAD</h2>
-      <p class="pricing-note">Your ad budget goes directly to Meta/Google. We only charge for the AdWise platform.</p>
-      <div class="plans-grid">
-
-        <!-- Starter -->
-        <div class="plan-card">
-          <div class="plan-name" style="color:#F5A623">Starter</div>
-          <div class="plan-price-row">
-            <span class="plan-dollar">$</span>
-            <span class="plan-price" style="color:#fff">149</span>
-            <span class="plan-per">CAD/mo</span>
-          </div>
-          <div class="plan-desc">Perfect for local shops and restaurants</div>
-          <div class="plan-div"></div>
-          <div class="plan-feat"><span class="ck" style="color:#F5A623">✓</span><span>1 platform (Meta or Google)</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#F5A623">✓</span><span>AI campaign setup</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#F5A623">✓</span><span>Up to $1,000 ad budget</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#F5A623">✓</span><span>Weekly performance report</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#F5A623">✓</span><span>Email support</span></div>
-          <button class="plan-btn" style="color:#F5A623;border-color:#F5A623;background:transparent" onclick="openChat()">Get Started</button>
-        </div>
-
-        <!-- Growth -->
-        <div class="plan-card pop" style="border-color:#00E5FF">
-          <div class="plan-badge" style="background:#00E5FF">Most Popular</div>
-          <div class="plan-name" style="color:#00E5FF">Growth</div>
-          <div class="plan-price-row">
-            <span class="plan-dollar">$</span>
-            <span class="plan-price" style="color:#fff">349</span>
-            <span class="plan-per">CAD/mo</span>
-          </div>
-          <div class="plan-desc">Most popular for contractors & clinics</div>
-          <div class="plan-div"></div>
-          <div class="plan-feat"><span class="ck" style="color:#00E5FF">✓</span><span>Meta + Google Ads</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#00E5FF">✓</span><span>Competitor analysis</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#00E5FF">✓</span><span>Up to $5,000 ad budget</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#00E5FF">✓</span><span>Auto-optimization weekly</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#00E5FF">✓</span><span>Live chat support</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#00E5FF">✓</span><span>Website audit included</span></div>
-          <button class="plan-btn" style="background:#00E5FF;color:#07080D;border-color:#00E5FF" onclick="openChat()">Get Started</button>
-        </div>
-
-        <!-- Pro -->
-        <div class="plan-card">
-          <div class="plan-name" style="color:#B8FF57">Pro</div>
-          <div class="plan-price-row">
-            <span class="plan-dollar">$</span>
-            <span class="plan-price" style="color:#fff">699</span>
-            <span class="plan-per">CAD/mo</span>
-          </div>
-          <div class="plan-desc">For high-spend, multi-location businesses</div>
-          <div class="plan-div"></div>
-          <div class="plan-feat"><span class="ck" style="color:#B8FF57">✓</span><span>Meta + Google + TikTok</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#B8FF57">✓</span><span>Unlimited ad budget</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#B8FF57">✓</span><span>Priority AI optimization</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#B8FF57">✓</span><span>Dedicated account AI</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#B8FF57">✓</span><span>Phone support</span></div>
-          <div class="plan-feat"><span class="ck" style="color:#B8FF57">✓</span><span>Custom monthly report</span></div>
-          <button class="plan-btn" style="color:#B8FF57;border-color:#B8FF57;background:transparent" onclick="openChat()">Get Started</button>
-        </div>
-
+<!-- FAQ -->
+<section id="faq" class="alt">
+  <div class="wrap">
+    <div class="section-tag">FAQ</div>
+    <h2>Common questions<br><em>answered honestly</em></h2>
+    <div style="height:36px"></div>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-q">Do I need any marketing experience?</div>
+        <div class="faq-a">None at all. Our AI handles strategy, targeting, and copywriting. You just answer a few questions about your business.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Where does my ad budget go?</div>
+        <div class="faq-a">Directly to Meta or Google — never through us. You maintain full control of your ad spend at all times.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How quickly will I see results?</div>
+        <div class="faq-a">Most clients see their first leads within 48–72 hours of launching. Full optimization takes 2–4 weeks as the AI learns your market.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I cancel anytime?</div>
+        <div class="faq-a">Yes. No contracts, no cancellation fees. Cancel anytime from your dashboard with one click.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do I need a Facebook Business account?</div>
+        <div class="faq-a">We'll guide you through setting one up in 5 minutes if you don't have one. It's free and takes no technical knowledge.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What if my ads don't perform?</div>
+        <div class="faq-a">We offer a 30-day money-back guarantee on the platform fee. If you don't see results, you don't pay. Simple.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is AdWise only for Canadian businesses?</div>
+        <div class="faq-a">Yes — we're built specifically for the Canadian market. Pricing is in CAD, support is in English and French, and our AI is trained on Canadian ad data.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How is AdWise different from hiring an agency?</div>
+        <div class="faq-a">Agencies charge $1,500–3,000/mo and often lock you into contracts. AdWise costs from $149 CAD/mo, launches faster, and shows you everything in real time.</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FINAL CTA -->
-  <section id="cta">
-    <div class="cta-glow"></div>
-    <div class="cta-inner">
-      <div class="eyebrow">Ready?</div>
-      <h2>Stop losing customers<br>to competitors who advertise.</h2>
-      <p class="cta-sub">Join 500+ Canadian businesses running smarter ads with AdWise. Setup takes 3 minutes. No agency needed.</p>
-      <button class="btn-primary" style="font-size:17px;padding:17px 44px" onclick="openChat()">
-        Launch My Campaign Free →
-      </button>
-      <div class="cta-logos">
-        <span class="cta-logo">Meta</span>
-        <span class="cta-logo">Google</span>
-        <span class="cta-logo">TikTok</span>
-        <span class="cta-logo">Instagram</span>
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="cta-eyebrow">Start today</div>
+    <h2>Your competitors are<br>already running ads. <em>Are you?</em></h2>
+    <p class="cta-p">Join 500+ Canadian businesses using AdWise to get more customers without agencies, complexity, or wasted budget.</p>
+    <button class="btn-cta" onclick="openChat()">Launch My Campaign Free →</button>
+    <div class="cta-note">Free to start · No credit card · Cancel anytime</div>
+    <div class="cta-platforms">
+      <span class="cta-platform">Meta Ads</span>
+      <span class="cta-platform">·</span>
+      <span class="cta-platform">Google Ads</span>
+      <span class="cta-platform">·</span>
+      <span class="cta-platform">TikTok Ads</span>
+      <span class="cta-platform">·</span>
+      <span class="cta-platform">Instagram</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="nav-brand">
+        <span class="nav-logo">AdWise</span>
+        <span class="nav-ca">Canada</span>
+      </div>
+      <p class="footer-desc">AI-powered advertising for Canadian small businesses. Launch in minutes, not months.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Product</div>
+      <div class="footer-links">
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
       </div>
     </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="nav-brand">
-      <span class="nav-logo" style="font-size:18px">AdWise</span>
-      <span class="nav-ca">Canada</span>
+    <div>
+      <div class="footer-col-title">Industries</div>
+      <div class="footer-links">
+        <a href="#industries">Contractors</a>
+        <a href="#industries">Dental & Medical</a>
+        <a href="#industries">Restaurants</a>
+        <a href="#industries">Law Firms</a>
+      </div>
     </div>
-    <div class="footer-links">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <a href="mailto:hello@adwisecanada.com">Contact</a>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <div class="footer-links">
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="mailto:hello@adwisecanada.com">Contact</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
     </div>
-    <div class="footer-copy">© 2025 AdWise Canada. All rights reserved.</div>
-  </footer>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 AdWise Canada Inc. All rights reserved.</span>
+    <span>hello@adwisecanada.com</span>
+  </div>
+</footer>
 
-</div><!-- /landing-view -->
+</div><!-- /landing -->
 
 
-<!-- ══════════════════════════════════════════
-     CHAT VIEW
-══════════════════════════════════════════ -->
+<!-- ══════ CHAT ══════ -->
 <div id="chat-view">
-
-  <!-- Chat Nav -->
   <div class="chat-nav">
-    <button class="btn-back" onclick="closeChat()">← Back</button>
-    <div class="chat-brand">
-      <div class="chat-avatar-small">W</div>
+    <button class="btn-back" onclick="closeChat()">← Back to site</button>
+    <div class="chat-brand-wrap">
+      <div class="chat-avatar">W</div>
       <div class="chat-brand-name">AdWise <span>Canada</span></div>
     </div>
-    <div class="chat-status">
-      <div class="status-dot"></div>
-      <span class="status-txt">AI Online</span>
-    </div>
+    <div class="chat-online"><div class="chat-online-dot"></div>AI Online</div>
   </div>
-
-  <!-- Progress -->
-  <div class="chat-progress" id="progress-bar">
-    <!-- Filled by JS -->
-  </div>
-
-  <!-- Messages -->
-  <div class="chat-messages" id="chat-messages">
-    <!-- Filled by JS -->
-  </div>
-
-  <!-- Input -->
+  <div class="chat-prog" id="prog"></div>
+  <div class="chat-msgs" id="msgs"></div>
   <div class="chat-input-wrap">
-    <textarea id="chat-textarea" placeholder="Type your message..." rows="1"></textarea>
-    <button id="send-btn" onclick="sendMessage()">↑</button>
+    <textarea id="chat-ta" placeholder="Type your message..." rows="1"></textarea>
+    <button id="send-btn" onclick="send()">↑</button>
   </div>
-
-</div><!-- /chat-view -->
-
+</div>
 
 <script>
-/* ══════════════════════════════════════════
-   ADWISE AI CHAT ENGINE
-══════════════════════════════════════════ */
-
-const SYSTEM_PROMPT = `You are the AdWise AI consultant — a sharp, confident advisor for small Canadian businesses who want to run effective advertising without hiring an agency.
+const SYS = `You are the AdWise AI consultant — a sharp, confident advisor for small Canadian businesses who want to run effective advertising without hiring an agency.
 
 Your job: have a natural conversation to collect key info, then deliver a personalized ad strategy.
 
-Collect (ONE question at a time, conversationally — do not ask multiple questions at once):
+Collect ONE question at a time:
 1. Business type and location (city/province in Canada)
 2. Main goal (more customers, calls, bookings, online sales)
-3. Target customer (who buys from them — age, interests, location)
+3. Target customer (who buys from them)
 4. Monthly ad budget in CAD
-5. Do they have a website? Ask for the URL. If no site → recommend AdWise can build one ($299 CAD, 5-day turnaround, conversion-optimized)
-6. Preferred platforms OR let AI decide (Meta/Instagram, Google, TikTok)
+5. Do they have a website? Ask for URL. If no site → recommend AdWise builds one ($299 CAD, 5 days)
+6. Preferred platforms or let AI decide
 
-After collecting all 6 pieces of info, deliver a PERSONALIZED CAMPAIGN PLAN formatted clearly:
+After all 6, deliver a CAMPAIGN PLAN:
 
 🎯 YOUR ADWISE CAMPAIGN PLAN
----
-📍 Business: [their business + city]
-💰 Budget: $[amount] CAD/month
+─────────────────────────────
+📍 [Business] · [City, Province]
+💰 Budget: $[X] CAD/month
 
 📱 RECOMMENDED PLATFORMS
-[Platform 1] — [% of budget] — [why it's right for them]
-[Platform 2] — [% of budget] — [why]
+• [Platform] — [X]% of budget — [why]
+• [Platform] — [X]% of budget — [why]
 
 👥 TARGET AUDIENCE
-[Specific demographics, location radius, interests]
+[Specific demographics, radius, interests]
 
 📣 AD FORMATS
-[What types of ads will run and why]
+[Types of ads and why]
 
 📈 EXPECTED RESULTS
-[Realistic leads/calls/visitors per month estimate]
+[Realistic leads/calls/bookings per month]
 
 ✅ NEXT STEP
-Click "Launch My Campaign" below and we'll get your ads live within 48 hours.
+Click "Launch My Campaign" and we'll have your ads live within 48 hours.
 
----
-Tone: Direct, confident, warm. Like a smart friend who knows marketing cold. No corporate speak. Use CAD amounts. Keep individual messages to 2-3 sentences max (except the final plan). Always wait for the user's answer before asking the next question.`;
+Tone: Direct, warm, no fluff. Like a knowledgeable friend. Use CAD. Max 2-3 sentences per message except the final plan.`;
 
 const STEPS = ["Business","Goals","Audience","Budget","Website","Platforms","Your Plan"];
-let messages = [];
-let history  = [];
-let currentStep = 1;
-let isLoading = false;
+let msgs=[], hist=[], step=1, busy=false;
 
-/* ── Open / Close chat ── */
-function openChat() {
+function openChat(){
   document.getElementById('landing-view').classList.add('hidden');
   document.getElementById('chat-view').classList.add('active');
-  buildProgress();
-  if (messages.length === 0) {
-    addMessage('assistant', "Hey! I'm your AdWise AI consultant 👋\n\nI'll help you get the right customers for your business — fast, affordable, and without the agency fees.\n\nLet's start simple: what kind of business do you run, and what city are you in?");
-  }
-  setTimeout(() => document.getElementById('chat-textarea').focus(), 200);
+  buildProg();
+  if(!msgs.length) addMsg('ai',"Hey! I'm your AdWise AI consultant 👋\n\nI'll help you get more customers through targeted advertising — in minutes, not months.\n\nLet's start: what kind of business do you run, and what city are you in?");
+  setTimeout(()=>document.getElementById('chat-ta').focus(),200);
 }
 
-function closeChat() {
+function closeChat(){
   document.getElementById('chat-view').classList.remove('active');
   document.getElementById('landing-view').classList.remove('hidden');
 }
 
-/* ── Progress bar ── */
-function buildProgress() {
-  const bar = document.getElementById('progress-bar');
-  bar.innerHTML = '';
-  STEPS.forEach((s, i) => {
-    const item = document.createElement('div');
-    item.className = 'prog-item';
-    item.id = `step-${i+1}`;
-    item.innerHTML = `
-      <div class="prog-dot ${currentStep > i+1 ? 'done' : currentStep === i+1 ? 'active' : ''}" id="pdot-${i+1}">
-        ${currentStep > i+1 ? '✓' : i+1}
-      </div>
-      <div class="prog-label ${currentStep >= i+1 ? 'active' : ''}">${s}</div>
-    `;
-    bar.appendChild(item);
-  });
+function buildProg(){
+  const el=document.getElementById('prog');
+  el.innerHTML=STEPS.map((s,i)=>`
+    <div class="prog-item">
+      <div class="prog-dot ${step>i+1?'done':step===i+1?'active':''}">${step>i+1?'✓':i+1}</div>
+      <div class="prog-lbl ${step>=i+1?step===i+1?'active':'done':''}">${s}</div>
+    </div>`).join('');
 }
 
-function updateProgress(step) {
-  if (step <= currentStep) return;
-  currentStep = step;
-  buildProgress();
+function addMsg(role,text){
+  msgs.push({role,text});
+  const c=document.getElementById('msgs');
+  const row=document.createElement('div');
+  row.className='msg-row'+(role==='user'?' user':'');
+  if(role==='ai'){
+    row.innerHTML=`<div class="msg-av">W</div><div class="bubble-ai">${esc(text).replace(/\n/g,'<br>')}</div>`;
+  } else {
+    row.innerHTML=`<div class="bubble-user">${esc(text).replace(/\n/g,'<br>')}</div>`;
+  }
+  c.appendChild(row);
+  c.scrollTop=c.scrollHeight;
 }
 
-function detectStep(text) {
-  const t = text.toLowerCase();
-  if ((t.includes('goal') || t.includes('objective') || t.includes('result') || t.includes('looking to')) && currentStep < 2) return 2;
-  if ((t.includes('customer') || t.includes('audience') || t.includes('who') || t.includes('target')) && currentStep < 3) return 3;
-  if ((t.includes('budget') || t.includes('spend') || t.includes('cad') || t.includes('per month')) && currentStep < 4) return 4;
-  if ((t.includes('website') || t.includes('url') || t.includes('online presence') || t.includes('adwise can build')) && currentStep < 5) return 5;
-  if ((t.includes('platform') || t.includes('facebook') || t.includes('google') || t.includes('instagram') || t.includes('tiktok')) && currentStep < 6) return 6;
-  if ((t.includes('campaign plan') || t.includes('recommended') || t.includes('next step') || t.includes('launch')) && currentStep < 7) return 7;
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function showTyping(){
+  const c=document.getElementById('msgs');
+  const r=document.createElement('div');
+  r.className='typing-row';r.id='typing';
+  r.innerHTML='<div class="msg-av">W</div><div class="typing-bubble"><span></span><span></span><span></span></div>';
+  c.appendChild(r);c.scrollTop=c.scrollHeight;
+}
+function hideTyping(){const e=document.getElementById('typing');if(e)e.remove();}
+
+function detectStep(t){
+  const s=t.toLowerCase();
+  if((s.includes('goal')||s.includes('objective')||s.includes('looking to'))&&step<2)return 2;
+  if((s.includes('customer')||s.includes('audience')||s.includes('who'))&&step<3)return 3;
+  if((s.includes('budget')||s.includes('spend')||s.includes('cad'))&&step<4)return 4;
+  if((s.includes('website')||s.includes('url')||s.includes('online'))&&step<5)return 5;
+  if((s.includes('platform')||s.includes('facebook')||s.includes('google')||s.includes('tiktok'))&&step<6)return 6;
+  if((s.includes('campaign plan')||s.includes('next step')||s.includes('launch'))&&step<7)return 7;
   return null;
 }
 
-/* ── Add message to UI ── */
-function addMessage(role, content) {
-  messages.push({ role, content });
-  const container = document.getElementById('chat-messages');
-
-  const row = document.createElement('div');
-  row.className = `msg-row ${role === 'user' ? 'user' : ''}`;
-
-  if (role === 'assistant') {
-    row.innerHTML = `
-      <div class="msg-avatar">W</div>
-      <div class="bubble-ai">${escapeHtml(content).replace(/\n/g, '<br>')}</div>
-    `;
-  } else {
-    row.innerHTML = `<div class="bubble-user">${escapeHtml(content).replace(/\n/g, '<br>')}</div>`;
-  }
-
-  container.appendChild(row);
-  container.scrollTop = container.scrollHeight;
-}
-
-function escapeHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-/* ── Typing indicator ── */
-function showTyping() {
-  const container = document.getElementById('chat-messages');
-  const row = document.createElement('div');
-  row.className = 'msg-row';
-  row.id = 'typing-row';
-  row.innerHTML = `
-    <div class="msg-avatar">W</div>
-    <div class="typing-box"><span></span><span></span><span></span></div>
-  `;
-  container.appendChild(row);
-  container.scrollTop = container.scrollHeight;
-}
-
-function hideTyping() {
-  const el = document.getElementById('typing-row');
-  if (el) el.remove();
-}
-
-/* ── Send message ── */
-async function sendMessage() {
-  const textarea = document.getElementById('chat-textarea');
-  const text = textarea.value.trim();
-  if (!text || isLoading) return;
-
-  textarea.value = '';
-  textarea.style.height = 'auto';
-  isLoading = true;
-  document.getElementById('send-btn').disabled = true;
-
-  addMessage('user', text);
-  const userMsg = { role: 'user', content: text };
-  const newHistory = [...history, userMsg];
-  history = newHistory;
-
+async function send(){
+  const ta=document.getElementById('chat-ta');
+  const text=ta.value.trim();
+  if(!text||busy)return;
+  ta.value='';ta.style.height='auto';
+  busy=true;document.getElementById('send-btn').disabled=true;
+  addMsg('user',text);
+  const uMsg={role:'user',content:text};
+  hist=[...hist,uMsg];
   showTyping();
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: newHistory,
-      }),
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:hist})
     });
-
-    const data = await res.json();
-    const reply = (data.content || []).map(b => b.text || '').join('') || 'Something went wrong. Please try again.';
-
+    const data=await res.json();
+    const reply=(data.content||[]).map(b=>b.text||'').join('')||'Something went wrong. Please try again.';
     hideTyping();
-    addMessage('assistant', reply);
-    history.push({ role: 'assistant', content: reply });
-
-    const step = detectStep(reply);
-    if (step) updateProgress(step);
-
-  } catch (err) {
+    addMsg('ai',reply);
+    hist.push({role:'assistant',content:reply});
+    const ns=detectStep(reply);
+    if(ns&&ns>step){step=ns;buildProg();}
+  }catch{
     hideTyping();
-    addMessage('assistant', 'Connection error — please check your internet and try again.');
+    addMsg('ai','Connection error. Please check your internet and try again.');
   }
-
-  isLoading = false;
-  document.getElementById('send-btn').disabled = false;
-  textarea.focus();
+  busy=false;
+  document.getElementById('send-btn').disabled=false;
+  ta.focus();
 }
 
-/* ── Keyboard ── */
-document.addEventListener('DOMContentLoaded', () => {
-  const ta = document.getElementById('chat-textarea');
-
-  ta.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  });
-
-  // Auto-resize textarea
-  ta.addEventListener('input', () => {
-    ta.style.height = 'auto';
-    ta.style.height = Math.min(ta.scrollHeight, 140) + 'px';
-  });
-
-  buildProgress();
+document.addEventListener('DOMContentLoaded',()=>{
+  buildProg();
+  const ta=document.getElementById('chat-ta');
+  ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+  ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,120)+'px';});
 });
 </script>
 </body>
