@@ -1,581 +1,1021 @@
-import { useState, useRef, useEffect } from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdWise Canada — AI-Powered Advertising for Canadian Businesses</title>
+  <meta name="description" content="AdWise launches Meta, Google and TikTok ads for Canadian small businesses automatically. Chat with AI, connect your account, get customers. From $149 CAD/mo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #07080D;
+      --bg2:       #0D0F18;
+      --amber:     #F5A623;
+      --amber-dim: rgba(245,166,35,0.12);
+      --amber-glow:rgba(245,166,35,0.3);
+      --cyan:      #00E5FF;
+      --lime:      #B8FF57;
+      --white:     #FFFFFF;
+      --w60:       rgba(255,255,255,0.6);
+      --w40:       rgba(255,255,255,0.4);
+      --w20:       rgba(255,255,255,0.2);
+      --w08:       rgba(255,255,255,0.08);
+      --w05:       rgba(255,255,255,0.05);
+      --radius:    14px;
+      --font-head: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: var(--font-body); cursor: pointer; border: none; outline: none; }
+    textarea, input { font-family: var(--font-body); outline: none; }
 
-/* ─────────────────────────────────────────────
-   ADWISE CANADA — Production Landing Page
-   Design: Editorial dark luxury, sharp typography
-   Font: Clash Display + DM Sans feel via CSS
-   Color: Deep navy-black + electric amber accent
-───────────────────────────────────────────── */
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--amber); border-radius: 4px; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
+    @keyframes float    { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+    @keyframes pulse    { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+    @keyframes bounce   { 0%,80%,100% { transform:translateY(0); } 40% { transform:translateY(-7px); } }
+    @keyframes glow     { 0%,100% { box-shadow:0 0 20px var(--amber-glow); } 50% { box-shadow:0 0 40px var(--amber-glow), 0 0 80px rgba(245,166,35,0.15); } }
+    @keyframes spin     { to { transform:rotate(360deg); } }
+    @keyframes slideIn  { from { opacity:0; transform:translateX(-10px); } to { opacity:1; transform:translateX(0); } }
+
+    .fade-up  { animation: fadeUp  0.6s ease both; }
+    .fade-in  { animation: fadeIn  0.5s ease both; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(7,8,13,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--w08);
+    }
+    .nav-brand { display:flex; align-items:baseline; gap:6px; }
+    .nav-logo  { font-family:var(--font-head); font-size:22px; font-weight:900; color:var(--white); letter-spacing:-0.5px; }
+    .nav-ca    { font-size:12px; font-weight:700; color:var(--amber); text-transform:uppercase; letter-spacing:2px; }
+    .nav-links { display:flex; gap:32px; }
+    .nav-links a { font-size:14px; font-weight:500; color:var(--w40); transition:color 0.2s; }
+    .nav-links a:hover { color:var(--white); }
+    .btn-nav {
+      background: var(--amber); color: #07080D;
+      padding: 10px 24px; border-radius: 8px;
+      font-weight: 800; font-size: 14px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-nav:hover { transform:translateY(-1px); box-shadow:0 4px 24px var(--amber-glow); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: calc(100vh - 68px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 48px 100px;
+      position: relative;
+    }
+    .hero-glow-1 {
+      position:absolute; top:20%; left:0; width:500px; height:500px;
+      background: radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%);
+      pointer-events:none;
+    }
+    .hero-glow-2 {
+      position:absolute; top:10%; right:10%; width:400px; height:400px;
+      background: radial-gradient(circle, rgba(0,229,255,0.04) 0%, transparent 70%);
+      pointer-events:none;
+    }
+    .hero-left { position:relative; z-index:1; }
+
+    .badge {
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--amber-dim); border:1px solid rgba(245,166,35,0.25);
+      border-radius:100px; padding:6px 16px;
+      font-size:12px; font-weight:600; color:var(--amber); letter-spacing:0.3px;
+      margin-bottom:28px;
+      animation: fadeUp 0.5s ease both;
+    }
+    .badge-dot {
+      width:6px; height:6px; border-radius:50%;
+      background:var(--amber); box-shadow:0 0 6px var(--amber);
+      animation: pulse 2s infinite;
+    }
+
+    h1 {
+      font-family: var(--font-head);
+      font-size: clamp(38px, 5vw, 62px);
+      font-weight: 900;
+      line-height: 1.06;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+    h1 .accent { color: var(--amber); }
+
+    .hero-p {
+      font-size: 17px; color: var(--w40); line-height: 1.72;
+      max-width: 480px; margin-bottom: 40px;
+      animation: fadeUp 0.5s 0.2s ease both;
+    }
+
+    .cta-wrap { animation: fadeUp 0.5s 0.3s ease both; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--amber); color: #07080D;
+      padding: 16px 36px; border-radius: 10px;
+      font-weight: 800; font-size: 16px; letter-spacing: -0.3px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: glow 3s ease infinite;
+    }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 40px var(--amber-glow); }
+    .cta-note { font-size:12px; color:var(--w20); margin-top:12px; }
+
+    .stats {
+      display:flex; gap:40px; margin-top:56px;
+      padding-top:40px; border-top:1px solid var(--w08);
+      animation: fadeUp 0.5s 0.4s ease both;
+    }
+    .stat-num  { font-family:var(--font-head); font-size:34px; font-weight:900; color:var(--amber); letter-spacing:-1px; line-height:1; }
+    .stat-label{ font-size:12px; color:var(--w40); margin-top:5px; }
+
+    /* ── HERO VISUAL ── */
+    .hero-right {
+      position:relative; display:flex;
+      justify-content:center; align-items:center;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .chat-preview {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--w08);
+      border-radius: 20px; overflow:hidden;
+      width:100%; max-width:420px;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+      animation: float 6s ease infinite;
+    }
+    .cp-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 18px; border-bottom:1px solid var(--w08);
+      background:rgba(255,255,255,0.03);
+    }
+    .cp-dots { display:flex; gap:6px; }
+    .cp-dot  { width:10px; height:10px; border-radius:50%; }
+    .cp-title { font-size:14px; font-weight:700; color:var(--w60); }
+    .cp-live  { display:flex; align-items:center; gap:5px; font-size:11px; color:#4ADE80; }
+    .cp-live-dot { width:6px; height:6px; border-radius:50%; background:#4ADE80; box-shadow:0 0 6px #4ADE80; animation:pulse 2s infinite; }
+    .cp-body  { padding:18px 16px; }
+    .cp-ai-bubble {
+      background:var(--w08); border-radius:4px 12px 12px 12px;
+      padding:10px 14px; font-size:13px; color:rgba(255,255,255,0.82);
+      max-width:80%; line-height:1.5; margin-bottom:8px;
+    }
+    .cp-user-bubble {
+      background:rgba(245,166,35,0.18); border:1px solid rgba(245,166,35,0.25);
+      border-radius:12px 4px 12px 12px;
+      padding:10px 14px; font-size:13px; color:var(--white);
+      max-width:80%; line-height:1.5; margin-bottom:8px; margin-left:auto;
+    }
+    .cp-row    { display:flex; }
+    .cp-row.right { justify-content:flex-end; }
+    .cp-typing {
+      display:flex; gap:5px; padding:10px 14px;
+      background:var(--w08); border-radius:4px 12px 12px 12px;
+      width:fit-content; margin-top:4px;
+    }
+    .cp-typing span {
+      width:6px; height:6px; border-radius:50%;
+      background:var(--amber); display:block;
+      animation: bounce 1.2s infinite;
+    }
+    .cp-typing span:nth-child(2) { animation-delay:0.2s; }
+    .cp-typing span:nth-child(3) { animation-delay:0.4s; }
+
+    .float-card {
+      position:absolute;
+      background:rgba(7,8,13,0.92); border:1px solid var(--w08);
+      border-radius:12px; padding:12px 16px;
+      display:flex; align-items:center; gap:10px;
+      backdrop-filter:blur(12px);
+      box-shadow:0 8px 32px rgba(0,0,0,0.5);
+    }
+    .fc-top  { top:10px; right:-20px; }
+    .fc-bot  { bottom:30px; left:-24px; }
+    .fc-icon { font-size:22px; }
+    .fc-title{ font-size:13px; font-weight:700; }
+    .fc-sub  { font-size:11px; color:var(--w40); margin-top:2px; }
+
+    /* ── SECTIONS ── */
+    section { padding: 100px 0; }
+    .section-inner { max-width:1200px; margin:0 auto; padding:0 48px; }
+    .eyebrow {
+      font-size:11px; font-weight:700; color:var(--amber);
+      text-transform:uppercase; letter-spacing:2.5px; margin-bottom:14px;
+    }
+    h2 {
+      font-family: var(--font-head);
+      font-size: clamp(30px, 4vw, 52px);
+      font-weight: 900; letter-spacing:-1.5px;
+      line-height:1.06; margin-bottom:56px;
+    }
+    .alt-bg { background: rgba(255,255,255,0.015); }
+
+    /* ── HOW IT WORKS ── */
+    .how-grid {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:20px;
+    }
+    .how-card {
+      background:var(--w05); border:1px solid var(--w08);
+      border-radius:var(--radius); padding:28px 22px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .how-card:hover { border-color:rgba(245,166,35,0.35); transform:translateY(-4px); }
+    .how-num  { font-family:var(--font-head); font-size:52px; font-weight:900; color:rgba(245,166,35,0.18); line-height:1; margin-bottom:16px; }
+    .how-title{ font-size:16px; font-weight:700; margin-bottom:10px; }
+    .how-body { font-size:13.5px; color:var(--w40); line-height:1.65; }
+
+    /* ── NICHES ── */
+    .niche-grid {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:18px;
+    }
+    .niche-card {
+      background:var(--w05); border:1px solid var(--w08);
+      border-radius:var(--radius); padding:28px 22px;
+      transition:all 0.3s;
+    }
+    .niche-card:hover { border-color:rgba(245,166,35,0.3); transform:translateY(-4px); }
+    .niche-icon  { font-size:36px; margin-bottom:14px; }
+    .niche-roi   {
+      display:inline-block;
+      background:var(--amber-dim); border:1px solid rgba(245,166,35,0.2);
+      border-radius:100px; padding:3px 10px;
+      font-size:11px; font-weight:700; color:var(--amber); margin-bottom:12px;
+    }
+    .niche-title { font-size:17px; font-weight:700; margin-bottom:8px; }
+    .niche-desc  { font-size:13px; color:var(--w40); line-height:1.6; }
+
+    /* ── PRICING ── */
+    .pricing-note { font-size:15px; color:var(--w40); margin-top:-36px; margin-bottom:48px; }
+    .plans-grid   { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .plan-card {
+      background:var(--w05); border:1.5px solid var(--w08);
+      border-radius:18px; padding:32px 26px;
+      position:relative; transition:transform 0.2s;
+    }
+    .plan-card:hover { transform:translateY(-4px); }
+    .plan-card.pop {
+      background:rgba(0,229,255,0.04);
+      box-shadow:0 0 60px rgba(0,229,255,0.07);
+    }
+    .plan-badge {
+      position:absolute; top:-13px; left:50%; transform:translateX(-50%);
+      font-size:11px; font-weight:800; padding:4px 16px;
+      border-radius:100px; white-space:nowrap; letter-spacing:0.3px;
+      color:#07080D;
+    }
+    .plan-name  { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px; }
+    .plan-price-row { display:flex; align-items:baseline; margin-bottom:6px; }
+    .plan-dollar{ font-size:22px; font-weight:900; color:var(--w60); margin-right:2px; }
+    .plan-price { font-family:var(--font-head); font-size:58px; font-weight:900; letter-spacing:-3px; line-height:1; }
+    .plan-per   { font-size:13px; color:var(--w40); margin-left:4px; }
+    .plan-desc  { font-size:13px; color:var(--w40); margin-bottom:20px; line-height:1.5; }
+    .plan-div   { height:1px; background:var(--w08); margin-bottom:20px; }
+    .plan-feat  { display:flex; gap:10px; font-size:14px; color:rgba(255,255,255,0.72); margin-bottom:10px; align-items:flex-start; }
+    .plan-feat .ck { font-weight:800; }
+    .plan-btn {
+      width:100%; margin-top:24px; padding:13px;
+      border-radius:10px; border:1.5px solid;
+      font-weight:800; font-size:14px; letter-spacing:-0.2px;
+      transition:all 0.2s;
+    }
+    .plan-btn:hover { transform:translateY(-1px); }
+
+    /* ── FINAL CTA ── */
+    #cta {
+      text-align:center; padding:120px 48px;
+      position:relative; overflow:hidden;
+    }
+    .cta-glow {
+      position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      width:900px; height:500px;
+      background:radial-gradient(ellipse, rgba(245,166,35,0.08) 0%, transparent 70%);
+      pointer-events:none;
+    }
+    .cta-inner { position:relative; z-index:1; max-width:720px; margin:0 auto; }
+    #cta h2   { margin-bottom:20px; margin-top:14px; }
+    .cta-sub  { font-size:17px; color:var(--w40); margin-bottom:40px; line-height:1.65; }
+    .cta-logos{ display:flex; justify-content:center; gap:24px; margin-top:32px; }
+    .cta-logo { font-size:13px; color:rgba(255,255,255,0.18); font-weight:600; letter-spacing:0.5px; }
+
+    /* ── FOOTER ── */
+    footer {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:22px 48px; border-top:1px solid var(--w08);
+      flex-wrap:wrap; gap:12px;
+    }
+    .footer-links { display:flex; gap:24px; }
+    .footer-links a { font-size:13px; color:rgba(255,255,255,0.28); transition:color 0.2s; }
+    .footer-links a:hover { color:var(--w60); }
+    .footer-copy { font-size:12px; color:rgba(255,255,255,0.18); }
+
+    /* ── CHAT VIEW ── */
+    #chat-view {
+      display:none; flex-direction:column;
+      height:100vh; background:var(--bg);
+    }
+    #chat-view.active { display:flex; }
+    #landing-view.hidden { display:none; }
+
+    .chat-nav {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 24px; border-bottom:1px solid var(--w08);
+      background:rgba(7,8,13,0.98); flex-shrink:0;
+    }
+    .btn-back {
+      background:none; border:1px solid rgba(255,255,255,0.12);
+      color:var(--w40); padding:7px 14px; border-radius:8px;
+      font-size:13px; font-family:var(--font-body);
+      transition:all 0.2s;
+    }
+    .btn-back:hover { border-color:var(--w40); color:var(--white); }
+
+    .chat-brand { display:flex; align-items:center; gap:8px; }
+    .chat-avatar-small {
+      width:32px; height:32px; border-radius:50%;
+      background:linear-gradient(135deg,#F5A623,#FF6B35);
+      display:flex; align-items:center; justify-content:center;
+      font-size:14px; font-weight:900; color:#fff;
+    }
+    .chat-brand-name { font-size:17px; font-weight:800; }
+    .chat-brand-name span { color:var(--amber); }
+
+    .chat-status { display:flex; align-items:center; gap:6px; }
+    .status-dot  { width:8px; height:8px; border-radius:50%; background:#4ADE80; box-shadow:0 0 8px #4ADE80; animation:pulse 2s infinite; }
+    .status-txt  { font-size:12px; color:var(--w40); }
+
+    /* Progress bar */
+    .chat-progress {
+      display:flex; padding:10px 20px; gap:4px;
+      border-bottom:1px solid rgba(255,255,255,0.05);
+      background:rgba(255,255,255,0.01); overflow-x:auto; flex-shrink:0;
+    }
+    .prog-item { display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; min-width:52px; }
+    .prog-dot  {
+      width:26px; height:26px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:10px; font-weight:800; color:#07080D;
+      background:rgba(255,255,255,0.1);
+      transition:all 0.3s;
+    }
+    .prog-dot.active  { background:var(--amber); box-shadow:0 0 14px var(--amber); transform:scale(1.15); }
+    .prog-dot.done    { background:var(--amber); }
+    .prog-label { font-size:9px; font-weight:600; color:rgba(255,255,255,0.25); text-align:center; transition:color 0.3s; }
+    .prog-label.active { color:var(--amber); }
+
+    /* Messages */
+    .chat-messages {
+      flex:1; overflow-y:auto; padding:20px 16px;
+      display:flex; flex-direction:column;
+    }
+    .msg-row { display:flex; margin-bottom:14px; animation:slideIn 0.3s ease; }
+    .msg-row.user { justify-content:flex-end; }
+    .msg-avatar {
+      width:34px; height:34px; border-radius:50%;
+      background:linear-gradient(135deg,#F5A623,#FF6B35);
+      display:flex; align-items:center; justify-content:center;
+      font-size:14px; font-weight:900; color:#fff;
+      flex-shrink:0; margin-right:10px; align-self:flex-end;
+    }
+    .bubble-ai {
+      background:var(--w08); border:1px solid rgba(255,255,255,0.09);
+      border-radius:4px 16px 16px 16px;
+      padding:12px 16px; font-size:14.5px; line-height:1.65;
+      max-width:75%; color:rgba(255,255,255,0.88);
+    }
+    .bubble-user {
+      background:linear-gradient(135deg,rgba(245,166,35,0.22),rgba(255,107,53,0.18));
+      border:1px solid rgba(245,166,35,0.28);
+      border-radius:16px 4px 16px 16px;
+      padding:12px 16px; font-size:14.5px; line-height:1.65;
+      max-width:75%; color:var(--white);
+    }
+    .typing-box {
+      background:var(--w08); border:1px solid rgba(255,255,255,0.09);
+      border-radius:4px 16px 16px 16px;
+      padding:14px 18px; display:flex; gap:6px; align-items:center;
+    }
+    .typing-box span {
+      width:7px; height:7px; border-radius:50%;
+      background:var(--amber); display:block;
+      animation:bounce 1.2s infinite;
+    }
+    .typing-box span:nth-child(2) { animation-delay:0.2s; }
+    .typing-box span:nth-child(3) { animation-delay:0.4s; }
+
+    /* Chat input */
+    .chat-input-wrap {
+      display:flex; gap:10px; padding:14px 16px;
+      border-top:1px solid var(--w08);
+      background:rgba(255,255,255,0.02); flex-shrink:0;
+    }
+    #chat-textarea {
+      flex:1; background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:12px; padding:13px 16px;
+      font-size:15px; color:var(--white);
+      resize:none; line-height:1.5; min-height:50px;
+      transition:border-color 0.2s;
+    }
+    #chat-textarea:focus { border-color:rgba(245,166,35,0.4); }
+    #chat-textarea::placeholder { color:var(--w20); }
+    #send-btn {
+      width:50px; height:50px; border-radius:12px;
+      background:linear-gradient(135deg,#F5A623,#FF6B35);
+      border:none; color:#fff; font-size:20px; font-weight:900;
+      align-self:flex-end; transition:opacity 0.2s, transform 0.2s;
+    }
+    #send-btn:hover:not(:disabled) { transform:translateY(-2px); }
+    #send-btn:disabled { opacity:0.35; cursor:not-allowed; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding:16px 20px; }
+      .nav-links { display:none; }
+      #hero { grid-template-columns:1fr; gap:40px; padding:48px 20px 60px; min-height:auto; }
+      .hero-right { display:none; }
+      .stats { gap:24px; }
+      .section-inner { padding:0 20px; }
+      .how-grid { grid-template-columns:repeat(2,1fr); }
+      .niche-grid { grid-template-columns:repeat(2,1fr); }
+      .plans-grid { grid-template-columns:1fr; max-width:400px; margin:0 auto; }
+      #cta { padding:80px 20px; }
+      footer { padding:20px; flex-direction:column; align-items:flex-start; }
+      .chat-progress { gap:2px; }
+      .prog-label { display:none; }
+    }
+    @media (max-width: 560px) {
+      h1 { letter-spacing:-1px; }
+      .how-grid { grid-template-columns:1fr; }
+      .niche-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     LANDING VIEW
+══════════════════════════════════════════ -->
+<div id="landing-view">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-brand">
+      <span class="nav-logo">AdWise</span>
+      <span class="nav-ca">Canada</span>
+    </div>
+    <div class="nav-links">
+      <a href="#how-it-works">How it works</a>
+      <a href="#industries">Industries</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <button class="btn-nav" onclick="openChat()">Start Free →</button>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+
+    <div class="hero-left">
+      <div class="badge fade-up">
+        <div class="badge-dot"></div>
+        AI-Powered · Canadian Businesses Only
+      </div>
+
+      <h1 class="fade-up" style="animation-delay:0.1s">
+        Your ads.<br>
+        <span class="accent">Launched in minutes.</span><br>
+        Not months.
+      </h1>
+
+      <p class="hero-p" style="animation-delay:0.2s">
+        AdWise is the AI that runs your Meta, Google, and TikTok ads automatically. Tell us your goal, connect your account, and watch customers arrive. No agency. No complexity. Just results.
+      </p>
+
+      <div class="cta-wrap" style="animation-delay:0.3s">
+        <button class="btn-primary" onclick="openChat()">
+          Launch My First Campaign
+          <span>→</span>
+        </button>
+        <div class="cta-note">Free to start · No credit card required</div>
+      </div>
+
+      <div class="stats">
+        <div>
+          <div class="stat-num">3 min</div>
+          <div class="stat-label">Average setup time</div>
+        </div>
+        <div>
+          <div class="stat-num">4.8×</div>
+          <div class="stat-label">Average client ROI</div>
+        </div>
+        <div>
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Businesses served</div>
+        </div>
+        <div>
+          <div class="stat-num">$149</div>
+          <div class="stat-label">Starting CAD/mo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO VISUAL -->
+    <div class="hero-right">
+      <div class="chat-preview">
+        <div class="cp-header">
+          <div class="cp-dots">
+            <div class="cp-dot" style="background:#FF5F57"></div>
+            <div class="cp-dot" style="background:#FFBD2E"></div>
+            <div class="cp-dot" style="background:#28CA41"></div>
+          </div>
+          <div class="cp-title">AdWise AI</div>
+          <div class="cp-live"><div class="cp-live-dot"></div> Live</div>
+        </div>
+        <div class="cp-body">
+          <div class="cp-row"><div class="cp-ai-bubble">Hey! What kind of business do you run, and where are you located?</div></div>
+          <div class="cp-row right"><div class="cp-user-bubble">Dental clinic in Calgary, AB</div></div>
+          <div class="cp-row"><div class="cp-ai-bubble">Great! What's your monthly ad budget?</div></div>
+          <div class="cp-row right"><div class="cp-user-bubble">Around $800 CAD/month</div></div>
+          <div class="cp-row"><div class="cp-ai-bubble">Perfect. Analyzing Calgary dental competitors now...</div></div>
+          <div class="cp-typing"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+      <div class="float-card fc-top">
+        <div class="fc-icon">📈</div>
+        <div>
+          <div class="fc-title">Campaign Live</div>
+          <div class="fc-sub">18 leads this week</div>
+        </div>
+      </div>
+      <div class="float-card fc-bot">
+        <div class="fc-icon">💰</div>
+        <div>
+          <div class="fc-title">Cost per lead</div>
+          <div class="fc-sub">$12.40 CAD avg</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how-it-works">
+    <div class="section-inner">
+      <div class="eyebrow">How it works</div>
+      <h2>From conversation<br>to live campaign</h2>
+      <div class="how-grid">
+        <div class="how-card">
+          <div class="how-num">01</div>
+          <div class="how-title">Tell us about your business</div>
+          <div class="how-body">Chat with our AI for 3 minutes. Describe your business, goals, and budget. No forms, no jargon — just a conversation.</div>
+        </div>
+        <div class="how-card">
+          <div class="how-num">02</div>
+          <div class="how-title">AI analyzes your market</div>
+          <div class="how-body">We study what your competitors are running in Meta Ad Library, identify winning audiences, and build your campaign strategy.</div>
+        </div>
+        <div class="how-card">
+          <div class="how-num">03</div>
+          <div class="how-title">Connect your ad account</div>
+          <div class="how-body">One click to connect Facebook or Google. Your budget goes directly to the platform — we never touch your money.</div>
+        </div>
+        <div class="how-card">
+          <div class="how-num">04</div>
+          <div class="how-title">Campaigns launch automatically</div>
+          <div class="how-body">AdWise creates and launches your ads via API. You see live results in your personal dashboard. AI optimizes weekly.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDUSTRIES -->
+  <section id="industries" class="alt-bg">
+    <div class="section-inner">
+      <div class="eyebrow">Industries</div>
+      <h2>Built for Canadian<br>small businesses</h2>
+      <div class="niche-grid">
+        <div class="niche-card">
+          <div class="niche-icon">🔨</div>
+          <div class="niche-roi">Up to 20× ROI</div>
+          <div class="niche-title">Contractors & Trades</div>
+          <div class="niche-desc">Roofing, HVAC, renovation, plumbing. High-ticket jobs with hyper-local targeting across Alberta and beyond.</div>
+        </div>
+        <div class="niche-card">
+          <div class="niche-icon">🦷</div>
+          <div class="niche-roi">Up to 15× ROI</div>
+          <div class="niche-title">Dental & Medical</div>
+          <div class="niche-desc">Fill your calendar with new patients. Target by location, demographics, and health intent signals.</div>
+        </div>
+        <div class="niche-card">
+          <div class="niche-icon">🍽️</div>
+          <div class="niche-roi">Up to 8× ROI</div>
+          <div class="niche-title">Restaurants & Cafés</div>
+          <div class="niche-desc">Drive foot traffic and reservations. Hyper-local targeting within 5km of your location.</div>
+        </div>
+        <div class="niche-card">
+          <div class="niche-icon">⚖️</div>
+          <div class="niche-roi">Up to 25× ROI</div>
+          <div class="niche-title">Law Firms</div>
+          <div class="niche-desc">Generate qualified consultations. Precision targeting by legal need and life events.</div>
+        </div>
+        <div class="niche-card">
+          <div class="niche-icon">🏋️</div>
+          <div class="niche-roi">Up to 10× ROI</div>
+          <div class="niche-title">Fitness & Wellness</div>
+          <div class="niche-desc">Memberships, classes, and bookings. Seasonal campaigns that convert at peak times.</div>
+        </div>
+        <div class="niche-card">
+          <div class="niche-icon">🏡</div>
+          <div class="niche-roi">Up to 30× ROI</div>
+          <div class="niche-title">Real Estate Agents</div>
+          <div class="niche-desc">Listings and buyer leads. Target active movers and investors in your specific market.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="section-inner">
+      <div class="eyebrow">Pricing</div>
+      <h2>Simple, transparent<br>pricing in CAD</h2>
+      <p class="pricing-note">Your ad budget goes directly to Meta/Google. We only charge for the AdWise platform.</p>
+      <div class="plans-grid">
+
+        <!-- Starter -->
+        <div class="plan-card">
+          <div class="plan-name" style="color:#F5A623">Starter</div>
+          <div class="plan-price-row">
+            <span class="plan-dollar">$</span>
+            <span class="plan-price" style="color:#fff">149</span>
+            <span class="plan-per">CAD/mo</span>
+          </div>
+          <div class="plan-desc">Perfect for local shops and restaurants</div>
+          <div class="plan-div"></div>
+          <div class="plan-feat"><span class="ck" style="color:#F5A623">✓</span><span>1 platform (Meta or Google)</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#F5A623">✓</span><span>AI campaign setup</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#F5A623">✓</span><span>Up to $1,000 ad budget</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#F5A623">✓</span><span>Weekly performance report</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#F5A623">✓</span><span>Email support</span></div>
+          <button class="plan-btn" style="color:#F5A623;border-color:#F5A623;background:transparent" onclick="openChat()">Get Started</button>
+        </div>
+
+        <!-- Growth -->
+        <div class="plan-card pop" style="border-color:#00E5FF">
+          <div class="plan-badge" style="background:#00E5FF">Most Popular</div>
+          <div class="plan-name" style="color:#00E5FF">Growth</div>
+          <div class="plan-price-row">
+            <span class="plan-dollar">$</span>
+            <span class="plan-price" style="color:#fff">349</span>
+            <span class="plan-per">CAD/mo</span>
+          </div>
+          <div class="plan-desc">Most popular for contractors & clinics</div>
+          <div class="plan-div"></div>
+          <div class="plan-feat"><span class="ck" style="color:#00E5FF">✓</span><span>Meta + Google Ads</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#00E5FF">✓</span><span>Competitor analysis</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#00E5FF">✓</span><span>Up to $5,000 ad budget</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#00E5FF">✓</span><span>Auto-optimization weekly</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#00E5FF">✓</span><span>Live chat support</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#00E5FF">✓</span><span>Website audit included</span></div>
+          <button class="plan-btn" style="background:#00E5FF;color:#07080D;border-color:#00E5FF" onclick="openChat()">Get Started</button>
+        </div>
+
+        <!-- Pro -->
+        <div class="plan-card">
+          <div class="plan-name" style="color:#B8FF57">Pro</div>
+          <div class="plan-price-row">
+            <span class="plan-dollar">$</span>
+            <span class="plan-price" style="color:#fff">699</span>
+            <span class="plan-per">CAD/mo</span>
+          </div>
+          <div class="plan-desc">For high-spend, multi-location businesses</div>
+          <div class="plan-div"></div>
+          <div class="plan-feat"><span class="ck" style="color:#B8FF57">✓</span><span>Meta + Google + TikTok</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#B8FF57">✓</span><span>Unlimited ad budget</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#B8FF57">✓</span><span>Priority AI optimization</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#B8FF57">✓</span><span>Dedicated account AI</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#B8FF57">✓</span><span>Phone support</span></div>
+          <div class="plan-feat"><span class="ck" style="color:#B8FF57">✓</span><span>Custom monthly report</span></div>
+          <button class="plan-btn" style="color:#B8FF57;border-color:#B8FF57;background:transparent" onclick="openChat()">Get Started</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section id="cta">
+    <div class="cta-glow"></div>
+    <div class="cta-inner">
+      <div class="eyebrow">Ready?</div>
+      <h2>Stop losing customers<br>to competitors who advertise.</h2>
+      <p class="cta-sub">Join 500+ Canadian businesses running smarter ads with AdWise. Setup takes 3 minutes. No agency needed.</p>
+      <button class="btn-primary" style="font-size:17px;padding:17px 44px" onclick="openChat()">
+        Launch My Campaign Free →
+      </button>
+      <div class="cta-logos">
+        <span class="cta-logo">Meta</span>
+        <span class="cta-logo">Google</span>
+        <span class="cta-logo">TikTok</span>
+        <span class="cta-logo">Instagram</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="nav-brand">
+      <span class="nav-logo" style="font-size:18px">AdWise</span>
+      <span class="nav-ca">Canada</span>
+    </div>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="mailto:hello@adwisecanada.com">Contact</a>
+    </div>
+    <div class="footer-copy">© 2025 AdWise Canada. All rights reserved.</div>
+  </footer>
+
+</div><!-- /landing-view -->
+
+
+<!-- ══════════════════════════════════════════
+     CHAT VIEW
+══════════════════════════════════════════ -->
+<div id="chat-view">
+
+  <!-- Chat Nav -->
+  <div class="chat-nav">
+    <button class="btn-back" onclick="closeChat()">← Back</button>
+    <div class="chat-brand">
+      <div class="chat-avatar-small">W</div>
+      <div class="chat-brand-name">AdWise <span>Canada</span></div>
+    </div>
+    <div class="chat-status">
+      <div class="status-dot"></div>
+      <span class="status-txt">AI Online</span>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="chat-progress" id="progress-bar">
+    <!-- Filled by JS -->
+  </div>
+
+  <!-- Messages -->
+  <div class="chat-messages" id="chat-messages">
+    <!-- Filled by JS -->
+  </div>
+
+  <!-- Input -->
+  <div class="chat-input-wrap">
+    <textarea id="chat-textarea" placeholder="Type your message..." rows="1"></textarea>
+    <button id="send-btn" onclick="sendMessage()">↑</button>
+  </div>
+
+</div><!-- /chat-view -->
+
+
+<script>
+/* ══════════════════════════════════════════
+   ADWISE AI CHAT ENGINE
+══════════════════════════════════════════ */
 
 const SYSTEM_PROMPT = `You are the AdWise AI consultant — a sharp, confident advisor for small Canadian businesses who want to run effective advertising without hiring an agency.
 
 Your job: have a natural conversation to collect key info, then deliver a personalized ad strategy.
 
-Collect (ONE question at a time, conversationally):
-1. Business type and location (city/province)
+Collect (ONE question at a time, conversationally — do not ask multiple questions at once):
+1. Business type and location (city/province in Canada)
 2. Main goal (more customers, calls, bookings, online sales)
-3. Target customer (who buys from them)
+3. Target customer (who buys from them — age, interests, location)
 4. Monthly ad budget in CAD
-5. Do they have a website? Ask for URL. If no site → recommend AdWise build one ($299 CAD, 5 days)
-6. Preferred platforms OR let AI decide
+5. Do they have a website? Ask for the URL. If no site → recommend AdWise can build one ($299 CAD, 5-day turnaround, conversion-optimized)
+6. Preferred platforms OR let AI decide (Meta/Instagram, Google, TikTok)
 
-After collecting all info, deliver a PERSONALIZED CAMPAIGN PLAN:
-- Recommended platforms with reasoning
-- Budget split (e.g. 70% Meta, 30% Google)
-- Target audience specifics
-- Ad format recommendations
-- Expected results (leads/month estimate)
-- Clear next step: "Click 'Launch My Campaign' to get started"
+After collecting all 6 pieces of info, deliver a PERSONALIZED CAMPAIGN PLAN formatted clearly:
 
-Tone: Direct, confident, friendly. Like a smart friend who knows marketing. No fluff. Use $ CAD amounts. Keep messages concise — 2-4 sentences max per message unless delivering the final plan.`;
+🎯 YOUR ADWISE CAMPAIGN PLAN
+---
+📍 Business: [their business + city]
+💰 Budget: $[amount] CAD/month
 
-const STATS = [
-  { num: "3 min", label: "Average setup time" },
-  { num: "4.8×", label: "Average ROI for clients" },
-  { num: "500+", label: "Canadian businesses served" },
-  { num: "$149", label: "Starting at CAD/mo" },
-];
+📱 RECOMMENDED PLATFORMS
+[Platform 1] — [% of budget] — [why it's right for them]
+[Platform 2] — [% of budget] — [why]
 
-const NICHES = [
-  { icon: "🔨", title: "Contractors & Trades", desc: "Roofing, HVAC, renovation, plumbing. High-ticket jobs, targeted local reach.", roi: "Up to 20× ROI" },
-  { icon: "🦷", title: "Dental & Medical", desc: "Fill your calendar with new patients. Target by location and demographics.", roi: "Up to 15× ROI" },
-  { icon: "🍽️", title: "Restaurants & Cafés", desc: "Drive foot traffic and reservations. Hyper-local targeting within 5km.", roi: "Up to 8× ROI" },
-  { icon: "⚖️", title: "Law Firms", desc: "Generate qualified consultations. Precision targeting by legal need.", roi: "Up to 25× ROI" },
-  { icon: "🏋️", title: "Fitness & Wellness", desc: "Memberships, classes, and bookings. Seasonal campaigns that convert.", roi: "Up to 10× ROI" },
-  { icon: "🏡", title: "Real Estate Agents", desc: "Listings and buyer leads. Target active movers in your market.", roi: "Up to 30× ROI" },
-];
+👥 TARGET AUDIENCE
+[Specific demographics, location radius, interests]
 
-const PLANS = [
-  {
-    name: "Starter",
-    price: "149",
-    desc: "Perfect for local shops and restaurants",
-    color: "#F5A623",
-    features: ["1 platform (Meta or Google)", "AI campaign setup", "Up to $1,000 ad budget", "Weekly performance report", "Email support"],
-  },
-  {
-    name: "Growth",
-    price: "349",
-    desc: "Most popular for contractors & clinics",
-    color: "#00E5FF",
-    popular: true,
-    features: ["Meta + Google Ads", "Competitor analysis", "Up to $5,000 ad budget", "Auto-optimization weekly", "Live chat support", "Website audit included"],
-  },
-  {
-    name: "Pro",
-    price: "699",
-    desc: "For high-spend, multi-location businesses",
-    color: "#B8FF57",
-    features: ["Meta + Google + TikTok", "Unlimited ad budget", "Priority AI optimization", "Dedicated account AI", "Phone support", "Custom monthly report"],
-  },
-];
+📣 AD FORMATS
+[What types of ads will run and why]
 
-const HOW = [
-  { n: "01", title: "Tell us about your business", body: "Chat with our AI for 3 minutes. Describe your business, goals, and budget. No forms, no jargon." },
-  { n: "02", title: "AI analyzes your market", body: "We study your competitors' ads, identify winning audiences, and build your campaign strategy." },
-  { n: "03", title: "Connect your ad account", body: "One click to connect Facebook or Google. Your money goes directly to the platform — we never touch it." },
-  { n: "04", title: "Campaigns launch automatically", body: "AdWise creates and launches your ads via API. You get a dashboard with live results." },
-];
+📈 EXPECTED RESULTS
+[Realistic leads/calls/visitors per month estimate]
 
-export default function AdWiseCanada() {
-  const [view, setView] = useState("landing"); // landing | chat
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content: "Hey! I'm AdWise — your AI advertising consultant.\n\nI'll get your business in front of the right customers in under 5 minutes. No agencies, no complexity.\n\nLet's start: what kind of business do you run, and where are you located?",
-    },
-  ]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState([]);
-  const [step, setStep] = useState(1);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const bottomRef = useRef(null);
-  const inputRef = useRef(null);
+✅ NEXT STEP
+Click "Launch My Campaign" below and we'll get your ads live within 48 hours.
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+---
+Tone: Direct, confident, warm. Like a smart friend who knows marketing cold. No corporate speak. Use CAD amounts. Keep individual messages to 2-3 sentences max (except the final plan). Always wait for the user's answer before asking the next question.`;
 
-  const detectStep = (text) => {
-    const t = text.toLowerCase();
-    if (t.includes("goal") || t.includes("objective") || t.includes("result")) return 2;
-    if (t.includes("customer") || t.includes("audience") || t.includes("who")) return 3;
-    if (t.includes("budget") || t.includes("spend") || t.includes("cad")) return 4;
-    if (t.includes("website") || t.includes("url") || t.includes("site")) return 5;
-    if (t.includes("platform") || t.includes("facebook") || t.includes("google") || t.includes("instagram")) return 6;
-    if (t.includes("campaign") || t.includes("launch") || t.includes("recommend") || t.includes("plan")) return 7;
-    return null;
-  };
+const STEPS = ["Business","Goals","Audience","Budget","Website","Platforms","Your Plan"];
+let messages = [];
+let history  = [];
+let currentStep = 1;
+let isLoading = false;
 
-  const send = async () => {
-    if (!input.trim() || loading) return;
-    const userMsg = { role: "user", content: input.trim() };
-    const newHist = [...history, userMsg];
-    setMessages(m => [...m, userMsg]);
-    setHistory(newHist);
-    setInput("");
-    setLoading(true);
-    try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          system: SYSTEM_PROMPT,
-          messages: newHist,
-        }),
-      });
-      const data = await res.json();
-      const reply = data.content?.map(b => b.text || "").join("") || "Something went wrong. Please try again.";
-      const aMsg = { role: "assistant", content: reply };
-      setMessages(m => [...m, aMsg]);
-      setHistory(h => [...h, aMsg]);
-      const s = detectStep(reply);
-      if (s && s > step) setStep(s);
-    } catch {
-      setMessages(m => [...m, { role: "assistant", content: "Connection error. Please try again." }]);
-    }
-    setLoading(false);
-    setTimeout(() => inputRef.current?.focus(), 50);
-  };
-
-  const onKey = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
-  };
-
-  const STEPS = ["Business", "Goals", "Audience", "Budget", "Website", "Platforms", "Your Plan"];
-
-  /* ── CHAT VIEW ── */
-  if (view === "chat") return (
-    <div style={C.chatWrap}>
-      <style>{chatKeyframes}</style>
-      {/* Chat Nav */}
-      <div style={C.chatNav}>
-        <button onClick={() => setView("landing")} style={C.backBtn}>← Back</button>
-        <div style={C.chatNavBrand}>
-          <div style={C.chatNavDot} />
-          <span style={C.chatNavName}>AdWise <span style={C.chatNavSub}>Canada</span></span>
-        </div>
-        <div style={C.chatNavStatus}>
-          <div style={C.statusPulse} />
-          <span style={C.statusText}>AI Online</span>
-        </div>
-      </div>
-
-      {/* Progress Steps */}
-      <div style={C.progress}>
-        {STEPS.map((s, i) => (
-          <div key={s} style={C.progressItem}>
-            <div style={{
-              ...C.progressDot,
-              background: step > i + 1 ? "#F5A623" : step === i + 1 ? "#F5A623" : "rgba(255,255,255,0.1)",
-              boxShadow: step === i + 1 ? "0 0 16px #F5A623" : "none",
-              transform: step === i + 1 ? "scale(1.2)" : "scale(1)",
-            }}>
-              {step > i + 1 ? "✓" : i + 1}
-            </div>
-            <span style={{ ...C.progressLabel, color: step >= i + 1 ? "#F5A623" : "rgba(255,255,255,0.25)" }}>{s}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Messages */}
-      <div style={C.msgs}>
-        {messages.map((m, i) => (
-          <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start", marginBottom: 14, animation: "fadeUp 0.3s ease" }}>
-            {m.role === "assistant" && <div style={C.avatar}>W</div>}
-            <div style={m.role === "user" ? C.userBubble : C.aiBubble}>
-              {m.content.split("\n").map((line, j) => (
-                <span key={j}>{line}{j < m.content.split("\n").length - 1 && <br />}</span>
-              ))}
-            </div>
-          </div>
-        ))}
-        {loading && (
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-            <div style={C.avatar}>W</div>
-            <div style={C.typingBox}>
-              <span style={{ ...C.typingDot, animationDelay: "0s" }} />
-              <span style={{ ...C.typingDot, animationDelay: "0.2s" }} />
-              <span style={{ ...C.typingDot, animationDelay: "0.4s" }} />
-            </div>
-          </div>
-        )}
-        <div ref={bottomRef} />
-      </div>
-
-      {/* Input */}
-      <div style={C.inputWrap}>
-        <textarea
-          ref={inputRef}
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={onKey}
-          placeholder="Type your message..."
-          rows={1}
-          style={C.textarea}
-          autoFocus
-        />
-        <button onClick={send} disabled={loading || !input.trim()} style={{ ...C.sendBtn, opacity: loading || !input.trim() ? 0.4 : 1 }}>
-          ↑
-        </button>
-      </div>
-    </div>
-  );
-
-  /* ── LANDING VIEW ── */
-  return (
-    <div style={L.root}>
-      <style>{landingCSS}</style>
-
-      {/* ── NAV ── */}
-      <nav style={L.nav}>
-        <div style={L.navBrand}>
-          <span style={L.navLogo}>AdWise</span>
-          <span style={L.navCountry}>Canada</span>
-        </div>
-        <div style={L.navLinks}>
-          {["How it works", "Industries", "Pricing"].map(l => (
-            <a key={l} href={`#${l.toLowerCase().replace(/ /g, "-")}`} style={L.navLink}>{l}</a>
-          ))}
-        </div>
-        <button style={L.navCta} onClick={() => setView("chat")}>
-          Start Free →
-        </button>
-      </nav>
-
-      {/* ── HERO ── */}
-      <section style={L.hero}>
-        {/* Background grid */}
-        <div style={L.heroBg} />
-        <div style={L.heroGlow} />
-
-        <div style={L.heroInner}>
-          <div style={L.heroBadge}>
-            <span style={L.heroBadgeDot} />
-            AI-Powered · Canadian Businesses Only
-          </div>
-
-          <h1 style={L.heroH1}>
-            Your ads.<br />
-            <span style={L.heroAccent}>Launched in minutes.</span><br />
-            Not months.
-          </h1>
-
-          <p style={L.heroP}>
-            AdWise is the AI that runs your Meta, Google, and TikTok ads — automatically. Tell us your goal, connect your account, and watch customers come in. No agency. No complexity. Just results.
-          </p>
-
-          <div style={L.heroCtas}>
-            <button className="cta-primary" style={L.ctaPrimary} onClick={() => setView("chat")}>
-              Launch My First Campaign
-              <span style={L.ctaArrow}>→</span>
-            </button>
-            <div style={L.ctaNote}>Free to start · No credit card required</div>
-          </div>
-
-          {/* Stats row */}
-          <div style={L.statsRow}>
-            {STATS.map((s, i) => (
-              <div key={i} style={L.statItem}>
-                <div style={L.statNum}>{s.num}</div>
-                <div style={L.statLabel}>{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Hero visual — chat preview */}
-        <div style={L.heroVisual}>
-          <div style={L.chatPreview}>
-            <div style={L.cpHeader}>
-              <div style={L.cpDots}>
-                <div style={{ ...L.cpDot, background: "#FF5F57" }} />
-                <div style={{ ...L.cpDot, background: "#FFBD2E" }} />
-                <div style={{ ...L.cpDot, background: "#28CA41" }} />
-              </div>
-              <div style={L.cpTitle}>AdWise AI</div>
-              <div style={L.cpLive}><div style={L.cpLiveDot} /> Live</div>
-            </div>
-            <div style={L.cpBody}>
-              {[
-                { ai: true, msg: "Hey! What kind of business do you run?" },
-                { ai: false, msg: "Dental clinic in Calgary" },
-                { ai: true, msg: "Perfect. What's your monthly ad budget?" },
-                { ai: false, msg: "Around $800 CAD" },
-                { ai: true, msg: "Got it. Analyzing competitors in Calgary..." },
-              ].map((m, i) => (
-                <div key={i} style={{ display: "flex", justifyContent: m.ai ? "flex-start" : "flex-end", marginBottom: 8 }}>
-                  <div style={m.ai ? L.cpAiBubble : L.cpUserBubble}>{m.msg}</div>
-                </div>
-              ))}
-              <div style={L.cpTyping}>
-                <div style={L.cpTypingDot} />
-                <div style={{ ...L.cpTypingDot, animationDelay: "0.2s" }} />
-                <div style={{ ...L.cpTypingDot, animationDelay: "0.4s" }} />
-              </div>
-            </div>
-          </div>
-
-          {/* Floating cards */}
-          <div style={{ ...L.floatCard, top: 20, right: -20 }}>
-            <div style={L.floatIcon}>📈</div>
-            <div>
-              <div style={L.floatTitle}>Campaign Live</div>
-              <div style={L.floatSub}>18 leads this week</div>
-            </div>
-          </div>
-          <div style={{ ...L.floatCard, bottom: 40, left: -30 }}>
-            <div style={L.floatIcon}>💰</div>
-            <div>
-              <div style={L.floatTitle}>Cost per lead</div>
-              <div style={L.floatSub}>$12.40 CAD avg</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS ── */}
-      <section id="how-it-works" style={L.section}>
-        <div style={L.sectionInner}>
-          <div style={L.sectionEyebrow}>How it works</div>
-          <h2 style={L.sectionH2}>From conversation<br />to live campaign</h2>
-          <div style={L.howGrid}>
-            {HOW.map((h, i) => (
-              <div key={i} className="how-card" style={L.howCard}>
-                <div style={L.howNum}>{h.n}</div>
-                <h3 style={L.howTitle}>{h.title}</h3>
-                <p style={L.howBody}>{h.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── INDUSTRIES ── */}
-      <section id="industries" style={{ ...L.section, background: "rgba(255,255,255,0.015)" }}>
-        <div style={L.sectionInner}>
-          <div style={L.sectionEyebrow}>Industries</div>
-          <h2 style={L.sectionH2}>Built for Canadian<br />small businesses</h2>
-          <div style={L.nicheGrid}>
-            {NICHES.map((n, i) => (
-              <div key={i} className="niche-card" style={L.nicheCard}>
-                <div style={L.nicheIcon}>{n.icon}</div>
-                <div style={L.nicheRoi}>{n.roi}</div>
-                <h3 style={L.nicheTitle}>{n.title}</h3>
-                <p style={L.nicheDesc}>{n.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── PRICING ── */}
-      <section id="pricing" style={L.section}>
-        <div style={L.sectionInner}>
-          <div style={L.sectionEyebrow}>Pricing</div>
-          <h2 style={L.sectionH2}>Simple, transparent<br />pricing in CAD</h2>
-          <p style={L.pricingNote}>Your ad budget goes directly to Meta/Google. We only charge for the platform.</p>
-          <div style={L.plansGrid}>
-            {PLANS.map((p, i) => (
-              <div key={i} className="plan-card" style={{ ...L.planCard, ...(p.popular ? L.planCardPop : {}), borderColor: p.popular ? p.color : "rgba(255,255,255,0.08)" }}>
-                {p.popular && <div style={{ ...L.planBadge, background: p.color, color: "#08090E" }}>Most Popular</div>}
-                <div style={{ ...L.planName, color: p.color }}>{p.name}</div>
-                <div style={L.planPriceRow}>
-                  <span style={L.planDollar}>$</span>
-                  <span style={L.planPrice}>{p.price}</span>
-                  <span style={L.planPer}> CAD/mo</span>
-                </div>
-                <div style={L.planDesc}>{p.desc}</div>
-                <div style={L.planDivider} />
-                {p.features.map((f, j) => (
-                  <div key={j} style={L.planFeature}>
-                    <span style={{ color: p.color, fontWeight: 700 }}>✓</span>
-                    <span>{f}</span>
-                  </div>
-                ))}
-                <button
-                  onClick={() => setView("chat")}
-                  style={{ ...L.planBtn, background: p.popular ? p.color : "transparent", color: p.popular ? "#08090E" : p.color, borderColor: p.color }}
-                >
-                  Get Started
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FINAL CTA ── */}
-      <section style={L.ctaSection}>
-        <div style={L.ctaGlow} />
-        <div style={L.ctaInner}>
-          <div style={L.sectionEyebrow}>Ready?</div>
-          <h2 style={L.ctaH2}>Stop losing customers<br />to competitors who advertise.</h2>
-          <p style={L.ctaP}>Join 500+ Canadian businesses running smarter ads with AdWise. Setup takes 3 minutes.</p>
-          <button className="cta-primary" style={{ ...L.ctaPrimary, fontSize: 18, padding: "18px 48px" }} onClick={() => setView("chat")}>
-            Launch My Campaign Free →
-          </button>
-          <div style={L.ctaLogos}>
-            {["Meta", "Google", "TikTok", "Instagram"].map(l => (
-              <span key={l} style={L.ctaLogo}>{l}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FOOTER ── */}
-      <footer style={L.footer}>
-        <div style={L.footerBrand}>
-          <span style={L.navLogo}>AdWise</span>
-          <span style={L.navCountry}>Canada</span>
-        </div>
-        <div style={L.footerLinks}>
-          {["Privacy Policy", "Terms of Service", "Contact"].map(l => (
-            <span key={l} style={L.footerLink}>{l}</span>
-          ))}
-        </div>
-        <div style={L.footerCopy}>© 2025 AdWise Canada. All rights reserved.</div>
-      </footer>
-    </div>
-  );
+/* ── Open / Close chat ── */
+function openChat() {
+  document.getElementById('landing-view').classList.add('hidden');
+  document.getElementById('chat-view').classList.add('active');
+  buildProgress();
+  if (messages.length === 0) {
+    addMessage('assistant', "Hey! I'm your AdWise AI consultant 👋\n\nI'll help you get the right customers for your business — fast, affordable, and without the agency fees.\n\nLet's start simple: what kind of business do you run, and what city are you in?");
+  }
+  setTimeout(() => document.getElementById('chat-textarea').focus(), 200);
 }
 
-/* ─── CHAT STYLES ─── */
-const C = {
-  chatWrap: { height: "100vh", display: "flex", flexDirection: "column", background: "#08090E", color: "#fff", fontFamily: "'DM Sans', sans-serif" },
-  chatNav: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 24px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(8,9,14,0.98)" },
-  backBtn: { background: "none", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.5)", padding: "7px 14px", borderRadius: 8, cursor: "pointer", fontSize: 13, fontFamily: "inherit" },
-  chatNavBrand: { display: "flex", alignItems: "center", gap: 8 },
-  chatNavDot: { width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg, #F5A623, #FF6B35)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: "#fff" },
-  chatNavName: { fontSize: 17, fontWeight: 800, color: "#fff" },
-  chatNavSub: { color: "#F5A623" },
-  chatNavStatus: { display: "flex", alignItems: "center", gap: 6 },
-  statusPulse: { width: 8, height: 8, borderRadius: "50%", background: "#4ADE80", boxShadow: "0 0 8px #4ADE80" },
-  statusText: { fontSize: 12, color: "rgba(255,255,255,0.45)" },
-  progress: { display: "flex", padding: "12px 20px", borderBottom: "1px solid rgba(255,255,255,0.05)", gap: 4, overflowX: "auto", background: "rgba(255,255,255,0.01)" },
-  progressItem: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4, flex: 1, minWidth: 55 },
-  progressDot: { width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, color: "#08090E", transition: "all 0.3s" },
-  progressLabel: { fontSize: 9, fontWeight: 600, textAlign: "center", transition: "color 0.3s", letterSpacing: 0.3 },
-  msgs: { flex: 1, overflowY: "auto", padding: "20px 16px" },
-  avatar: { width: 34, height: 34, borderRadius: "50%", background: "linear-gradient(135deg, #F5A623, #FF6B35)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: "#fff", flexShrink: 0, marginRight: 10 },
-  aiBubble: { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: "4px 16px 16px 16px", padding: "12px 16px", fontSize: 14, lineHeight: 1.65, maxWidth: "76%", color: "rgba(255,255,255,0.88)" },
-  userBubble: { background: "linear-gradient(135deg, rgba(245,166,35,0.25), rgba(255,107,53,0.2))", border: "1px solid rgba(245,166,35,0.3)", borderRadius: "16px 4px 16px 16px", padding: "12px 16px", fontSize: 14, lineHeight: 1.65, maxWidth: "76%", color: "#fff" },
-  typingBox: { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: "4px 16px 16px 16px", padding: "14px 18px", display: "flex", gap: 5, alignItems: "center" },
-  typingDot: { width: 7, height: 7, borderRadius: "50%", background: "#F5A623", display: "inline-block", animation: "bounce 1.2s infinite" },
-  inputWrap: { display: "flex", gap: 10, padding: "14px 16px", borderTop: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.02)" },
-  textarea: { flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 12, padding: "12px 16px", fontSize: 15, color: "#fff", resize: "none", outline: "none", fontFamily: "inherit", lineHeight: 1.5 },
-  sendBtn: { width: 48, height: 48, borderRadius: 12, background: "linear-gradient(135deg, #F5A623, #FF6B35)", border: "none", color: "#fff", fontSize: 20, fontWeight: 900, cursor: "pointer", flexShrink: 0, alignSelf: "flex-end", transition: "opacity 0.2s" },
-};
+function closeChat() {
+  document.getElementById('chat-view').classList.remove('active');
+  document.getElementById('landing-view').classList.remove('hidden');
+}
 
-/* ─── LANDING STYLES ─── */
-const L = {
-  root: { minHeight: "100vh", background: "#08090E", color: "#fff", fontFamily: "'DM Sans', 'Segoe UI', sans-serif", overflowX: "hidden" },
-  nav: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 48px", position: "sticky", top: 0, background: "rgba(8,9,14,0.92)", backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(255,255,255,0.06)", zIndex: 200 },
-  navBrand: { display: "flex", alignItems: "baseline", gap: 6 },
-  navLogo: { fontSize: 22, fontWeight: 900, letterSpacing: "-0.5px", color: "#fff" },
-  navCountry: { fontSize: 13, fontWeight: 600, color: "#F5A623", letterSpacing: 1, textTransform: "uppercase" },
-  navLinks: { display: "flex", gap: 32 },
-  navLink: { color: "rgba(255,255,255,0.45)", fontSize: 14, fontWeight: 500, textDecoration: "none", cursor: "pointer", transition: "color 0.2s" },
-  navCta: { background: "#F5A623", color: "#08090E", border: "none", padding: "10px 24px", borderRadius: 8, fontWeight: 800, fontSize: 14, cursor: "pointer", fontFamily: "inherit", letterSpacing: "-0.2px" },
+/* ── Progress bar ── */
+function buildProgress() {
+  const bar = document.getElementById('progress-bar');
+  bar.innerHTML = '';
+  STEPS.forEach((s, i) => {
+    const item = document.createElement('div');
+    item.className = 'prog-item';
+    item.id = `step-${i+1}`;
+    item.innerHTML = `
+      <div class="prog-dot ${currentStep > i+1 ? 'done' : currentStep === i+1 ? 'active' : ''}" id="pdot-${i+1}">
+        ${currentStep > i+1 ? '✓' : i+1}
+      </div>
+      <div class="prog-label ${currentStep >= i+1 ? 'active' : ''}">${s}</div>
+    `;
+    bar.appendChild(item);
+  });
+}
 
-  hero: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center", maxWidth: 1200, margin: "0 auto", padding: "80px 48px 100px", position: "relative", minHeight: "calc(100vh - 70px)" },
-  heroBg: { position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 20% 50%, rgba(245,166,35,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(0,229,255,0.03) 0%, transparent 50%)", pointerEvents: "none" },
-  heroGlow: { position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: 600, height: 600, background: "radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%)", pointerEvents: "none" },
-  heroInner: { position: "relative", zIndex: 1 },
-  heroBadge: { display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(245,166,35,0.1)", border: "1px solid rgba(245,166,35,0.25)", borderRadius: 100, padding: "6px 16px", fontSize: 12, color: "#F5A623", fontWeight: 600, marginBottom: 28, letterSpacing: 0.3 },
-  heroBadgeDot: { width: 6, height: 6, borderRadius: "50%", background: "#F5A623", boxShadow: "0 0 6px #F5A623" },
-  heroH1: { fontSize: "clamp(38px, 5vw, 60px)", fontWeight: 900, lineHeight: 1.08, letterSpacing: "-2px", marginBottom: 24, color: "#fff" },
-  heroAccent: { color: "#F5A623" },
-  heroP: { fontSize: 17, color: "rgba(255,255,255,0.5)", lineHeight: 1.7, marginBottom: 40, maxWidth: 480 },
-  heroCtas: { display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start", marginBottom: 56 },
-  ctaPrimary: { display: "inline-flex", alignItems: "center", gap: 10, background: "#F5A623", color: "#08090E", border: "none", padding: "15px 32px", borderRadius: 10, fontWeight: 800, fontSize: 16, cursor: "pointer", fontFamily: "inherit", letterSpacing: "-0.3px", transition: "transform 0.2s, box-shadow 0.2s", boxShadow: "0 0 40px rgba(245,166,35,0.3)" },
-  ctaArrow: { fontSize: 18 },
-  ctaNote: { fontSize: 12, color: "rgba(255,255,255,0.3)" },
-  statsRow: { display: "flex", gap: 40, paddingTop: 40, borderTop: "1px solid rgba(255,255,255,0.07)" },
-  statItem: {},
-  statNum: { fontSize: 32, fontWeight: 900, color: "#F5A623", letterSpacing: "-1px", lineHeight: 1 },
-  statLabel: { fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 4 },
+function updateProgress(step) {
+  if (step <= currentStep) return;
+  currentStep = step;
+  buildProgress();
+}
 
-  heroVisual: { position: "relative", display: "flex", justifyContent: "center", alignItems: "center" },
-  chatPreview: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, overflow: "hidden", width: "100%", maxWidth: 400, boxShadow: "0 40px 80px rgba(0,0,0,0.5)" },
-  cpHeader: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.03)" },
-  cpDots: { display: "flex", gap: 6 },
-  cpDot: { width: 10, height: 10, borderRadius: "50%" },
-  cpTitle: { fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,0.7)" },
-  cpLive: { display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#4ADE80" },
-  cpLiveDot: { width: 6, height: 6, borderRadius: "50%", background: "#4ADE80", boxShadow: "0 0 6px #4ADE80" },
-  cpBody: { padding: "16px" },
-  cpAiBubble: { background: "rgba(255,255,255,0.07)", borderRadius: "4px 12px 12px 12px", padding: "8px 12px", fontSize: 13, color: "rgba(255,255,255,0.8)", maxWidth: "80%", lineHeight: 1.5 },
-  cpUserBubble: { background: "rgba(245,166,35,0.2)", border: "1px solid rgba(245,166,35,0.25)", borderRadius: "12px 4px 12px 12px", padding: "8px 12px", fontSize: 13, color: "#fff", maxWidth: "80%", lineHeight: 1.5 },
-  cpTyping: { display: "flex", gap: 5, padding: "8px 12px", background: "rgba(255,255,255,0.07)", borderRadius: "4px 12px 12px 12px", width: "fit-content", marginTop: 8 },
-  cpTypingDot: { width: 6, height: 6, borderRadius: "50%", background: "#F5A623", animation: "bounce 1.2s infinite" },
-  floatCard: { position: "absolute", background: "rgba(8,9,14,0.9)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "12px 16px", display: "flex", alignItems: "center", gap: 10, backdropFilter: "blur(12px)", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" },
-  floatIcon: { fontSize: 22 },
-  floatTitle: { fontSize: 13, fontWeight: 700, color: "#fff" },
-  floatSub: { fontSize: 11, color: "rgba(255,255,255,0.45)", marginTop: 2 },
+function detectStep(text) {
+  const t = text.toLowerCase();
+  if ((t.includes('goal') || t.includes('objective') || t.includes('result') || t.includes('looking to')) && currentStep < 2) return 2;
+  if ((t.includes('customer') || t.includes('audience') || t.includes('who') || t.includes('target')) && currentStep < 3) return 3;
+  if ((t.includes('budget') || t.includes('spend') || t.includes('cad') || t.includes('per month')) && currentStep < 4) return 4;
+  if ((t.includes('website') || t.includes('url') || t.includes('online presence') || t.includes('adwise can build')) && currentStep < 5) return 5;
+  if ((t.includes('platform') || t.includes('facebook') || t.includes('google') || t.includes('instagram') || t.includes('tiktok')) && currentStep < 6) return 6;
+  if ((t.includes('campaign plan') || t.includes('recommended') || t.includes('next step') || t.includes('launch')) && currentStep < 7) return 7;
+  return null;
+}
 
-  section: { padding: "100px 0" },
-  sectionInner: { maxWidth: 1200, margin: "0 auto", padding: "0 48px" },
-  sectionEyebrow: { fontSize: 11, fontWeight: 700, color: "#F5A623", textTransform: "uppercase", letterSpacing: 2, marginBottom: 14 },
-  sectionH2: { fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 900, letterSpacing: "-1.5px", lineHeight: 1.08, marginBottom: 56, color: "#fff" },
+/* ── Add message to UI ── */
+function addMessage(role, content) {
+  messages.push({ role, content });
+  const container = document.getElementById('chat-messages');
 
-  howGrid: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24 },
-  howCard: { background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: "28px 24px", transition: "border-color 0.3s, transform 0.3s", cursor: "default" },
-  howNum: { fontSize: 48, fontWeight: 900, color: "rgba(245,166,35,0.2)", lineHeight: 1, marginBottom: 16 },
-  howTitle: { fontSize: 16, fontWeight: 800, marginBottom: 10, color: "#fff", letterSpacing: "-0.3px" },
-  howBody: { fontSize: 14, color: "rgba(255,255,255,0.45)", lineHeight: 1.65 },
+  const row = document.createElement('div');
+  row.className = `msg-row ${role === 'user' ? 'user' : ''}`;
 
-  nicheGrid: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 },
-  nicheCard: { background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: "28px 24px", transition: "all 0.3s", cursor: "default" },
-  nicheIcon: { fontSize: 36, marginBottom: 12 },
-  nicheRoi: { display: "inline-block", background: "rgba(245,166,35,0.1)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 100, padding: "3px 10px", fontSize: 11, color: "#F5A623", fontWeight: 700, marginBottom: 12 },
-  nicheTitle: { fontSize: 17, fontWeight: 800, marginBottom: 8, color: "#fff" },
-  nicheDesc: { fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.6 },
+  if (role === 'assistant') {
+    row.innerHTML = `
+      <div class="msg-avatar">W</div>
+      <div class="bubble-ai">${escapeHtml(content).replace(/\n/g, '<br>')}</div>
+    `;
+  } else {
+    row.innerHTML = `<div class="bubble-user">${escapeHtml(content).replace(/\n/g, '<br>')}</div>`;
+  }
 
-  pricingNote: { fontSize: 15, color: "rgba(255,255,255,0.4)", marginTop: -32, marginBottom: 48 },
-  plansGrid: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 },
-  planCard: { background: "rgba(255,255,255,0.03)", border: "1px solid", borderRadius: 18, padding: "32px 28px", position: "relative", transition: "transform 0.2s" },
-  planCardPop: { background: "rgba(0,229,255,0.04)", boxShadow: "0 0 60px rgba(0,229,255,0.08)" },
-  planBadge: { position: "absolute", top: -13, left: "50%", transform: "translateX(-50%)", fontSize: 11, fontWeight: 800, padding: "4px 14px", borderRadius: 100, whiteSpace: "nowrap", letterSpacing: 0.3 },
-  planName: { fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 10 },
-  planPriceRow: { display: "flex", alignItems: "baseline", marginBottom: 6 },
-  planDollar: { fontSize: 24, fontWeight: 900, color: "rgba(255,255,255,0.6)", marginRight: 2 },
-  planPrice: { fontSize: 56, fontWeight: 900, letterSpacing: "-3px", color: "#fff", lineHeight: 1 },
-  planPer: { fontSize: 14, color: "rgba(255,255,255,0.35)", marginLeft: 4 },
-  planDesc: { fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 20, lineHeight: 1.5 },
-  planDivider: { height: 1, background: "rgba(255,255,255,0.07)", marginBottom: 20 },
-  planFeature: { display: "flex", gap: 10, fontSize: 14, color: "rgba(255,255,255,0.7)", marginBottom: 10, alignItems: "flex-start" },
-  planBtn: { width: "100%", marginTop: 24, padding: "13px", borderRadius: 10, border: "1.5px solid", fontWeight: 800, fontSize: 14, cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s", letterSpacing: "-0.2px" },
+  container.appendChild(row);
+  container.scrollTop = container.scrollHeight;
+}
 
-  ctaSection: { padding: "120px 48px", textAlign: "center", position: "relative", overflow: "hidden" },
-  ctaGlow: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 800, height: 400, background: "radial-gradient(ellipse, rgba(245,166,35,0.08) 0%, transparent 70%)", pointerEvents: "none" },
-  ctaInner: { position: "relative", zIndex: 1, maxWidth: 700, margin: "0 auto" },
-  ctaH2: { fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 900, letterSpacing: "-2px", lineHeight: 1.05, marginBottom: 20, marginTop: 14 },
-  ctaP: { fontSize: 17, color: "rgba(255,255,255,0.45)", marginBottom: 40, lineHeight: 1.6 },
-  ctaLogos: { display: "flex", justifyContent: "center", gap: 24, marginTop: 32 },
-  ctaLogo: { fontSize: 13, color: "rgba(255,255,255,0.2)", fontWeight: 600, letterSpacing: 0.5 },
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
-  footer: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "24px 48px", borderTop: "1px solid rgba(255,255,255,0.06)", flexWrap: "wrap", gap: 12 },
-  footerBrand: { display: "flex", alignItems: "baseline", gap: 6 },
-  footerLinks: { display: "flex", gap: 24 },
-  footerLink: { fontSize: 13, color: "rgba(255,255,255,0.3)", cursor: "pointer" },
-  footerCopy: { fontSize: 12, color: "rgba(255,255,255,0.2)" },
-};
+/* ── Typing indicator ── */
+function showTyping() {
+  const container = document.getElementById('chat-messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row';
+  row.id = 'typing-row';
+  row.innerHTML = `
+    <div class="msg-avatar">W</div>
+    <div class="typing-box"><span></span><span></span><span></span></div>
+  `;
+  container.appendChild(row);
+  container.scrollTop = container.scrollHeight;
+}
 
-const chatKeyframes = `
-  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes bounce { 0%,80%,100% { transform:translateY(0); } 40% { transform:translateY(-6px); } }
-`;
+function hideTyping() {
+  const el = document.getElementById('typing-row');
+  if (el) el.remove();
+}
 
-const landingCSS = `
-  @keyframes bounce { 0%,80%,100% { transform:translateY(0); } 40% { transform:translateY(-6px); } }
-  @keyframes float { 0%,100% { transform:translateY(0px); } 50% { transform:translateY(-8px); } }
-  .cta-primary:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(245,166,35,0.45) !important; }
-  .how-card:hover { border-color: rgba(245,166,35,0.3) !important; transform: translateY(-4px); }
-  .niche-card:hover { border-color: rgba(245,166,35,0.25) !important; transform: translateY(-4px); }
-  .plan-card:hover { transform: translateY(-4px); }
-  a:hover { color: rgba(255,255,255,0.85) !important; }
-`;
+/* ── Send message ── */
+async function sendMessage() {
+  const textarea = document.getElementById('chat-textarea');
+  const text = textarea.value.trim();
+  if (!text || isLoading) return;
+
+  textarea.value = '';
+  textarea.style.height = 'auto';
+  isLoading = true;
+  document.getElementById('send-btn').disabled = true;
+
+  addMessage('user', text);
+  const userMsg = { role: 'user', content: text };
+  const newHistory = [...history, userMsg];
+  history = newHistory;
+
+  showTyping();
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: newHistory,
+      }),
+    });
+
+    const data = await res.json();
+    const reply = (data.content || []).map(b => b.text || '').join('') || 'Something went wrong. Please try again.';
+
+    hideTyping();
+    addMessage('assistant', reply);
+    history.push({ role: 'assistant', content: reply });
+
+    const step = detectStep(reply);
+    if (step) updateProgress(step);
+
+  } catch (err) {
+    hideTyping();
+    addMessage('assistant', 'Connection error — please check your internet and try again.');
+  }
+
+  isLoading = false;
+  document.getElementById('send-btn').disabled = false;
+  textarea.focus();
+}
+
+/* ── Keyboard ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const ta = document.getElementById('chat-textarea');
+
+  ta.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  // Auto-resize textarea
+  ta.addEventListener('input', () => {
+    ta.style.height = 'auto';
+    ta.style.height = Math.min(ta.scrollHeight, 140) + 'px';
+  });
+
+  buildProgress();
+});
+</script>
+</body>
+</html>
